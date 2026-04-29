@@ -21,14 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- ══════════════════════════════════ -->
-            <!-- HEADER: D&D COMPANION              -->
-            <!-- ══════════════════════════════════ -->
             <LinearLayout
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingTop="24dp"
-                android:paddingBottom="16dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -48,10 +45,8 @@
                     android:letterSpacing="0.15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
             </LinearLayout>
 
-            <!-- Separador dorado -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -59,9 +54,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"/>
 
-            <!-- ══════════════════════════════════ -->
-            <!-- SECCIÓN: TU PERSONAJE              -->
-            <!-- ══════════════════════════════════ -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_margin="12dp"
@@ -70,23 +62,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- Encabezado sección -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
                     <TextView
                         android:text="TU PERSONAJE"
                         android:textColor="@color/dorado"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:fontFamily="serif"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
-
                     <TextView
                         android:text="›"
                         android:textColor="@color/dorado"
@@ -95,37 +84,33 @@
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
 
-                <!-- Separador bajo título -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/borde"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="10dp"/>
 
-                <!-- Contenido personaje -->
+                <!-- Avatar | Info + stats CA/PG/INIC -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!-- Avatar placeholder -->
                     <LinearLayout
-                        android:layout_width="90dp"
-                        android:layout_height="110dp"
+                        android:layout_width="80dp"
+                        android:layout_height="95dp"
                         android:background="@drawable/avatar_bg"
                         android:gravity="center"
-                        android:layout_marginEnd="12dp">
-
+                        android:layout_marginEnd="10dp">
                         <TextView
                             android:text="⚔"
-                            android:textSize="36sp"
+                            android:textSize="32sp"
                             android:textColor="@color/dorado"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
 
-                    <!-- Info personaje -->
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
@@ -136,7 +121,7 @@
                             android:id="@+id/txtNombrePersonaje"
                             android:text="Arannis"
                             android:textColor="@color/texto"
-                            android:textSize="20sp"
+                            android:textSize="19sp"
                             android:textStyle="bold"
                             android:fontFamily="serif"
                             android:layout_width="wrap_content"
@@ -145,317 +130,212 @@
                         <TextView
                             android:text="Elfo de los Bosques"
                             android:textColor="@color/texto_secundario"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
                         <TextView
-                            android:text="Mago Nivel 5"
+                            android:text="Mago Nivel 5  ·  Caótico Neutral"
                             android:textColor="@color/texto_secundario"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="7dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <TextView
-                            android:text="Caótico Neutral"
-                            android:textColor="@color/texto_secundario"
-                            android:textSize="13sp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <!-- Estadísticas CA / PG / INIC -->
+                        <!-- CA / PG / INIC -->
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp"
-                                android:padding="6dp"
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:layout_marginEnd="5dp" android:padding="5dp"
                                 android:background="@drawable/stat_bg"
-                                android:layout_width="50dp"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:text="CA"
-                                    android:textColor="@color/dorado_claro"
-                                    android:textSize="9sp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                                <TextView
-                                    android:text="13"
-                                    android:textColor="@color/texto"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                android:layout_width="48dp" android:layout_height="wrap_content">
+                                <TextView android:text="CA" android:textColor="@color/dorado_claro"
+                                    android:textSize="9sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                <TextView android:text="13" android:textColor="@color/texto"
+                                    android:textSize="16sp" android:textStyle="bold"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                             </LinearLayout>
 
                             <LinearLayout
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:layout_marginEnd="8dp"
-                                android:padding="6dp"
-                                android:background="@drawable/stat_bg"
                                 android:layout_width="50dp"
-                                android:layout_height="wrap_content">
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="5dp"
+                                android:background="@drawable/stat_bg"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="5dp">
 
                                 <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:text="PG"
                                     android:textColor="@color/dorado_claro"
-                                    android:textSize="9sp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="9sp" />
+
                                 <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:text="31/31"
                                     android:textColor="@color/texto"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:gravity="center"
-                                android:padding="6dp"
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:padding="5dp"
                                 android:background="@drawable/stat_bg"
-                                android:layout_width="50dp"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:text="INIC."
-                                    android:textColor="@color/dorado_claro"
-                                    android:textSize="9sp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
-                                <TextView
-                                    android:text="+2"
-                                    android:textColor="@color/texto"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"/>
+                                android:layout_width="48dp" android:layout_height="wrap_content">
+                                <TextView android:text="INIC." android:textColor="@color/dorado_claro"
+                                    android:textSize="9sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                <TextView android:text="+2" android:textColor="@color/texto"
+                                    android:textSize="16sp" android:textStyle="bold"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Atributos FUE DES CON INT SAB CAR -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                <!-- Atributos -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="@color/borde"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginTop="10dp" android:layout_marginBottom="8dp"/>
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout android:orientation="horizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
 
                     <LinearLayout android:orientation="vertical" android:gravity="center"
                         android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                         <TextView android:text="FUE" android:textColor="@color/dorado_claro" android:textSize="9sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="8" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                        <TextView android:text="8" android:textColor="@color/texto" android:textSize="15sp" android:textStyle="bold"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         <TextView android:text="(-1)" android:textColor="@color/texto_secundario" android:textSize="10sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                     <LinearLayout android:orientation="vertical" android:gravity="center"
                         android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                         <TextView android:text="DES" android:textColor="@color/dorado_claro" android:textSize="9sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="14" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                        <TextView android:text="14" android:textColor="@color/texto" android:textSize="15sp" android:textStyle="bold"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         <TextView android:text="(+2)" android:textColor="@color/texto_secundario" android:textSize="10sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                     <LinearLayout android:orientation="vertical" android:gravity="center"
                         android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                         <TextView android:text="CON" android:textColor="@color/dorado_claro" android:textSize="9sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="14" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                        <TextView android:text="14" android:textColor="@color/texto" android:textSize="15sp" android:textStyle="bold"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         <TextView android:text="(+2)" android:textColor="@color/texto_secundario" android:textSize="10sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                     <LinearLayout android:orientation="vertical" android:gravity="center"
                         android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                         <TextView android:text="INT" android:textColor="@color/dorado_claro" android:textSize="9sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="18" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                        <TextView android:text="18" android:textColor="@color/texto" android:textSize="15sp" android:textStyle="bold"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         <TextView android:text="(+4)" android:textColor="@color/texto_secundario" android:textSize="10sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                     <LinearLayout android:orientation="vertical" android:gravity="center"
                         android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                         <TextView android:text="SAB" android:textColor="@color/dorado_claro" android:textSize="9sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="12" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                        <TextView android:text="12" android:textColor="@color/texto" android:textSize="15sp" android:textStyle="bold"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         <TextView android:text="(+1)" android:textColor="@color/texto_secundario" android:textSize="10sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                     <LinearLayout android:orientation="vertical" android:gravity="center"
                         android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
                         <TextView android:text="CAR" android:textColor="@color/dorado_claro" android:textSize="9sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="10" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                        <TextView android:text="10" android:textColor="@color/texto" android:textSize="15sp" android:textStyle="bold"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         <TextView android:text="(+0)" android:textColor="@color/texto_secundario" android:textSize="10sp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ══════════════════════════════════ -->
-            <!-- SECCIÓN: MISIONES ACTIVAS          -->
-            <!-- ══════════════════════════════════ -->
+            <!-- MISIONES ACTIVAS -->
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
                 android:layout_marginBottom="12dp"
                 android:padding="12dp"
                 android:background="@drawable/seccion_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="✦"
-                        android:textColor="@color/dorado"
-                        android:textSize="14sp"
+                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="✦" android:textColor="@color/dorado" android:textSize="14sp"
                         android:layout_marginEnd="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="MISIONES ACTIVAS"
-                        android:textColor="@color/dorado"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:fontFamily="serif"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:text="›"
-                        android:textColor="@color/dorado"
-                        android:textSize="20sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:text="MISIONES ACTIVAS" android:textColor="@color/dorado"
+                        android:textSize="15sp" android:textStyle="bold" android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <TextView android:text="›" android:textColor="@color/dorado" android:textSize="20sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="@color/borde"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
 
-                <!-- Lista misiones activas (se llena desde Java) -->
                 <LinearLayout
                     android:id="@+id/layoutActivas"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <!-- Botón ver todas -->
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:gravity="center"
+                <LinearLayout android:orientation="horizontal" android:gravity="center"
                     android:paddingTop="8dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="VER TODAS LAS MISIONES  ›"
-                        android:textColor="@color/dorado_claro"
-                        android:textSize="12sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="VER TODAS LAS MISIONES  ›"
+                        android:textColor="@color/dorado_claro" android:textSize="12sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ══════════════════════════════════ -->
-            <!-- SECCIÓN: MISIONES DISPONIBLES      -->
-            <!-- ══════════════════════════════════ -->
+            <!-- MISIONES DISPONIBLES -->
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
                 android:layout_marginBottom="12dp"
                 android:padding="12dp"
                 android:background="@drawable/seccion_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="✦"
-                        android:textColor="@color/dorado"
-                        android:textSize="14sp"
+                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="✦" android:textColor="@color/dorado" android:textSize="14sp"
                         android:layout_marginEnd="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="MISIONES DISPONIBLES"
-                        android:textColor="@color/dorado"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:fontFamily="serif"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:text="›"
-                        android:textColor="@color/dorado"
-                        android:textSize="20sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:text="MISIONES DISPONIBLES" android:textColor="@color/dorado"
+                        android:textSize="15sp" android:textStyle="bold" android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <TextView android:text="›" android:textColor="@color/dorado" android:textSize="20sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="@color/borde"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
 
-                <!-- Lista misiones disponibles (se llena desde Java) -->
                 <LinearLayout
                     android:id="@+id/layoutDisponibles"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <!-- Botón agregar misión -->
                 <Button
                     android:id="@+id/btnAgregar"
                     android:text="＋  NUEVA MISIÓN"
@@ -465,67 +345,68 @@
                     android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-
             </LinearLayout>
 
-            <!-- ══════════════════════════════════ -->
-            <!-- SECCIÓN: HECHIZOS CONOCIDOS        -->
-            <!-- ══════════════════════════════════ -->
+
+            <!-- HECHIZOS -->
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
                 android:layout_marginBottom="12dp"
                 android:padding="12dp"
                 android:background="@drawable/seccion_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="✦" android:textColor="@color/dorado" android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:text="HECHIZOS CONOCIDOS" android:textColor="@color/dorado"
+                        android:textSize="15sp" android:textStyle="bold" android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <TextView android:text="›" android:textColor="@color/dorado" android:textSize="20sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/borde"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
+
+
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:text="✦"
-                        android:textColor="@color/dorado"
-                        android:textSize="14sp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:text="HECHIZOS CONOCIDOS"
-                        android:textColor="@color/dorado"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:fontFamily="serif"
+                    <LinearLayout
+                        android:id="@+id/layoutSpells"
+                        android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"/>
 
-                    <TextView
-                        android:text="›"
-                        android:textColor="@color/dorado"
-                        android:textSize="20sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:padding="10dp"
+                        android:background="@drawable/tomo_bg"
+                        android:layout_width="88dp"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:text="📖"
+                            android:textSize="42sp"
+                            android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"/>
-
-                <!-- Lista hechizos (se llena desde Java) -->
-                <LinearLayout
-                    android:id="@+id/layoutSpells"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:text="VER TODOS (12)  ›"
@@ -535,21 +416,36 @@
                     android:paddingTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-
             </LinearLayout>
 
-            <!-- ══════════════════════════════════ -->
-            <!-- SECCIÓN: TIRADA DE DADOS           -->
-            <!-- ══════════════════════════════════ -->
+
+            <!-- SECCIÓN: TIRADA DE DADOS -->
+
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
                 android:layout_marginBottom="24dp"
                 android:padding="12dp"
                 android:background="@drawable/seccion_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="✦" android:textColor="@color/dorado" android:textSize="14sp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:text="TIRADA DE DADOS" android:textColor="@color/dorado"
+                        android:textSize="15sp" android:textStyle="bold" android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                    <TextView android:text="›" android:textColor="@color/dorado" android:textSize="20sp"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/borde"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="10dp"/>
+
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -557,143 +453,92 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:text="✦"
-                        android:textColor="@color/dorado"
-                        android:textSize="14sp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="TIRADA DE DADOS"
-                        android:textColor="@color/dorado"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:fontFamily="serif"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:text="›"
-                        android:textColor="@color/dorado"
-                        android:textSize="20sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="12dp"/>
-
-                <!-- Fila de dados + resultado -->
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <!-- Dados -->
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
-                        <LinearLayout android:orientation="vertical" android:gravity="center"
-                            android:layout_marginEnd="6dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content">
-                            <Button
-                                android:id="@+id/btnD4"
-                                android:text="▲"
-                                android:textSize="22sp"
-                                android:textColor="@color/texto"
-                                android:backgroundTint="@color/dado_bg"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="0dp"/>
-                            <TextView android:text="d4" android:textColor="@color/texto_secundario"
-                                android:textSize="11sp" android:gravity="center"
-                                android:layout_width="48dp" android:layout_height="wrap_content"/>
+                        <!-- Fila de dados -->
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <Button android:id="@+id/btnD4" android:text="▲"
+                                    android:textSize="16sp" android:textColor="@color/texto"
+                                    android:backgroundTint="@color/dado_bg"
+                                    android:layout_width="40dp" android:layout_height="40dp" android:padding="0dp"/>
+                                <TextView android:text="d4" android:textColor="@color/texto_secundario"
+                                    android:textSize="10sp" android:gravity="center"
+                                    android:layout_width="40dp" android:layout_height="wrap_content"/>
+                            </LinearLayout>
+
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <Button android:id="@+id/btnD6" android:text="⬡"
+                                    android:textSize="16sp" android:textColor="@color/texto"
+                                    android:backgroundTint="@color/dado_bg"
+                                    android:layout_width="40dp" android:layout_height="40dp" android:padding="0dp"/>
+                                <TextView android:text="d6" android:textColor="@color/texto_secundario"
+                                    android:textSize="10sp" android:gravity="center"
+                                    android:layout_width="40dp" android:layout_height="wrap_content"/>
+                            </LinearLayout>
+
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <Button android:id="@+id/btnD8" android:text="◆"
+                                    android:textSize="16sp" android:textColor="@color/texto"
+                                    android:backgroundTint="@color/dado_bg"
+                                    android:layout_width="40dp" android:layout_height="40dp" android:padding="0dp"/>
+                                <TextView android:text="d8" android:textColor="@color/texto_secundario"
+                                    android:textSize="10sp" android:gravity="center"
+                                    android:layout_width="40dp" android:layout_height="wrap_content"/>
+                            </LinearLayout>
+
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <Button android:id="@+id/btnD10" android:text="⬟"
+                                    android:textSize="16sp" android:textColor="@color/texto"
+                                    android:backgroundTint="@color/dado_bg"
+                                    android:layout_width="40dp" android:layout_height="40dp" android:padding="0dp"/>
+                                <TextView android:text="d10" android:textColor="@color/texto_secundario"
+                                    android:textSize="10sp" android:gravity="center"
+                                    android:layout_width="40dp" android:layout_height="wrap_content"/>
+                            </LinearLayout>
+
+                            <LinearLayout android:orientation="vertical" android:gravity="center"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <Button android:id="@+id/btnD20" android:text="⬠"
+                                    android:textSize="16sp" android:textColor="@color/dorado"
+                                    android:backgroundTint="@color/dado_bg"
+                                    android:layout_width="40dp" android:layout_height="40dp" android:padding="0dp"/>
+                                <TextView android:text="d20" android:textColor="@color/dorado"
+                                    android:textSize="10sp" android:gravity="center"
+                                    android:layout_width="40dp" android:layout_height="wrap_content"/>
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <LinearLayout android:orientation="vertical" android:gravity="center"
-                            android:layout_marginEnd="6dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content">
-                            <Button
-                                android:id="@+id/btnD6"
-                                android:text="⬡"
-                                android:textSize="22sp"
-                                android:textColor="@color/texto"
-                                android:backgroundTint="@color/dado_bg"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="0dp"/>
-                            <TextView android:text="d6" android:textColor="@color/texto_secundario"
-                                android:textSize="11sp" android:gravity="center"
-                                android:layout_width="48dp" android:layout_height="wrap_content"/>
-                        </LinearLayout>
-
-                        <LinearLayout android:orientation="vertical" android:gravity="center"
-                            android:layout_marginEnd="6dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content">
-                            <Button
-                                android:id="@+id/btnD8"
-                                android:text="◆"
-                                android:textSize="22sp"
-                                android:textColor="@color/texto"
-                                android:backgroundTint="@color/dado_bg"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="0dp"/>
-                            <TextView android:text="d8" android:textColor="@color/texto_secundario"
-                                android:textSize="11sp" android:gravity="center"
-                                android:layout_width="48dp" android:layout_height="wrap_content"/>
-                        </LinearLayout>
-
-                        <LinearLayout android:orientation="vertical" android:gravity="center"
-                            android:layout_marginEnd="6dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content">
-                            <Button
-                                android:id="@+id/btnD10"
-                                android:text="⬟"
-                                android:textSize="22sp"
-                                android:textColor="@color/texto"
-                                android:backgroundTint="@color/dado_bg"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="0dp"/>
-                            <TextView android:text="d10" android:textColor="@color/texto_secundario"
-                                android:textSize="11sp" android:gravity="center"
-                                android:layout_width="48dp" android:layout_height="wrap_content"/>
-                        </LinearLayout>
-
-                        <LinearLayout android:orientation="vertical" android:gravity="center"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content">
-                            <Button
-                                android:id="@+id/btnD20"
-                                android:text="⬠"
-                                android:textSize="22sp"
-                                android:textColor="@color/dorado"
-                                android:backgroundTint="@color/dado_bg"
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="0dp"/>
-                            <TextView android:text="d20" android:textColor="@color/dorado"
-                                android:textSize="11sp" android:gravity="center"
-                                android:layout_width="48dp" android:layout_height="wrap_content"/>
-                        </LinearLayout>
-
+                        <!-- Botón aleatorio -->
+                        <Button
+                            android:id="@+id/btnAleatorio"
+                            android:text="🎲  TIRAR ALEATORIO"
+                            android:backgroundTint="@color/boton_bg"
+                            android:textColor="@color/dorado"
+                            android:textSize="11sp"
+                            android:layout_marginTop="6dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"/>
                     </LinearLayout>
 
-                    <!-- Resultado -->
+                    <!-- Panel resultado -->
                     <LinearLayout
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="8dp"
+                        android:layout_marginStart="10dp"
                         android:background="@drawable/stat_bg"
                         android:layout_width="70dp"
                         android:layout_height="wrap_content">
@@ -701,7 +546,7 @@
                         <TextView
                             android:text="RESULTADO"
                             android:textColor="@color/dorado_claro"
-                            android:textSize="9sp"
+                            android:textSize="8sp"
                             android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -725,19 +570,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
-
                 </LinearLayout>
-
-                <!-- Botón tirar aleatorio -->
-                <Button
-                    android:id="@+id/btnAleatorio"
-                    android:text="🎲  TIRAR DADO ALEATORIO"
-                    android:backgroundTint="@color/boton_bg"
-                    android:textColor="@color/dorado"
-                    android:textSize="13sp"
-                    android:layout_marginTop="12dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
