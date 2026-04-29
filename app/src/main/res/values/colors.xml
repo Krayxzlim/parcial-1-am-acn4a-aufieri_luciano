@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="fondo">#121212</color>
-    <color name="card">#1E1E1E</color>
-    <color name="primario">#5E35B1</color>
-    <color name="dorado">#C9A227</color>
-    <color name="texto">#FFFFFF</color>
+    <!-- color general -->
+    <color name="fondo">#0D0D14</color>
+    <color name="seccion_fondo">#16161F</color>
+    <color name="stat_fondo">#1E1E2A</color>
+
+    <!-- textos  -->
+    <color name="texto">#E8E0D0</color>
+    <color name="texto_secundario">#8A8070</color>
+
+    <!-- detalles -->
+    <color name="dorado">#C9A84C</color>
+    <color name="dorado_claro">#E8C97A</color>
+    <color name="dorado_borde">#5A4A20</color>
+
+    <!-- botones -->
+    <color name="primario">#6B2FA0</color>
+    <color name="boton_bg">#1E1E2A</color>
+    <color name="dado_bg">#2A2A3A</color>
+
+    <!-- bordes -->
+    <color name="borde">#2A2A3A</color>
+
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>
