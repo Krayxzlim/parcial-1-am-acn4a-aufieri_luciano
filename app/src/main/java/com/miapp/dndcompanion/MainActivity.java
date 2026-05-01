@@ -1,10 +1,12 @@
-package com.miapp.dndcompanion; // ← tu package
+package com.miapp.dndcompanion;
 
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtResultado, txtTipoDado;
     int contador = 0;
     Random random = new Random();
+
+    ArrayList<String> historial = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 "Elimina a los bandidos del camino del norte.", "200 XP");
 
         // Hechizos placeholder
-        agregarSpell("Descarga de Escarcha", "TRUCO");
+        agregarSpell("Descarga de Escarcha",  "TRUCO");
         agregarSpell("Mano Mágica",           "TRUCO");
         agregarSpell("Escudo",                "NIVEL 1");
         agregarSpell("Misiles Mágicos",       "NIVEL 1");
@@ -51,17 +55,42 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnD6).setOnClickListener(v  -> tirar(6));
         findViewById(R.id.btnD8).setOnClickListener(v  -> tirar(8));
         findViewById(R.id.btnD10).setOnClickListener(v -> tirar(10));
+        findViewById(R.id.btnD12).setOnClickListener(v -> tirar(12));
         findViewById(R.id.btnD20).setOnClickListener(v -> tirar(20));
+
         findViewById(R.id.btnAleatorio).setOnClickListener(v -> {
             int[] dados = {4, 6, 8, 10, 12, 20};
             tirar(dados[random.nextInt(dados.length)]);
         });
+
+        // Historial
+        findViewById(R.id.btnHistorial).setOnClickListener(v -> mostrarHistorial());
     }
 
     private void tirar(int caras) {
         int resultado = random.nextInt(caras) + 1;
         txtResultado.setText(String.valueOf(resultado));
         txtTipoDado.setText("(d" + caras + ")");
+        historial.add(0, "d" + caras + " → " + resultado); // más reciente primero
+        // Limitar historial a 20 entradas
+        if (historial.size() > 20) historial.remove(historial.size() - 1);
+    }
+
+    private void mostrarHistorial() {
+        if (historial.isEmpty()) {
+            Toast.makeText(this, "Aún no tiraste ningún dado.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        StringBuilder sb = new StringBuilder("Últimas tiradas:\n\n");
+        int mostrar = Math.min(historial.size(), 10);
+        for (int i = 0; i < mostrar; i++) {
+            sb.append("• ").append(historial.get(i)).append("\n");
+        }
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Historial de dados")
+                .setMessage(sb.toString())
+                .setPositiveButton("Cerrar", null)
+                .show();
     }
 
     private void agregarMisionDisponible(String nombre, String descripcion, String recompensa) {
