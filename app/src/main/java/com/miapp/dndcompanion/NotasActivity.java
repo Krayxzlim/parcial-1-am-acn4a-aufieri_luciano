@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,24 +31,28 @@ public class NotasActivity extends AppCompatActivity {
     }
 
     private void configurarMenu() {
-        findViewById(R.id.menuInicio).setOnClickListener(v -> {
+        View menuInicio = findViewById(R.id.menuInicio);
+        menuInicio.setOnClickListener(v -> pulsarYEjecutar(v, () -> {
             startActivity(new Intent(this, MainActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
-        });
+        }));
 
-        findViewById(R.id.menuInventario).setOnClickListener(v -> {
+        View menuInventario = findViewById(R.id.menuInventario);
+        menuInventario.setOnClickListener(v -> pulsarYEjecutar(v, () -> {
             startActivity(new Intent(this, InventarioActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            finish();
-        });
+        }));
 
-        findViewById(R.id.menuNotas).setOnClickListener(v -> { /* ya estamos aquí */ });
+        View menuNotas = findViewById(R.id.menuNotas);
+        menuNotas.setOnClickListener(v ->
+                v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press)));
 
-        findViewById(R.id.menuAjustes).setOnClickListener(v ->
+        View menuAjustes = findViewById(R.id.menuAjustes);
+        menuAjustes.setOnClickListener(v -> pulsarYEjecutar(v, () ->
                 mostrarDialogoEstetico("Ajustes",
                         "⚙️  Los ajustes estarán\ndisponibles en la próxima versión.")
-        );
+        ));
     }
     private void mostrarDialogoEstetico(String titulo, String mensaje) {
         LinearLayout root = new LinearLayout(this);
@@ -88,17 +94,23 @@ public class NotasActivity extends AppCompatActivity {
         b.setOnClickListener(v -> d.dismiss());
         d.show();
     }
-    /** dp a px */
+    private void pulsarYEjecutar(View v, Runnable accion) {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.btn_press);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation a) {}
+            @Override public void onAnimationRepeat(Animation a) {}
+            @Override public void onAnimationEnd(Animation a) { accion.run(); }
+        });
+        v.startAnimation(anim);
+    }
     private int dp(int val) {
         return Math.round(val * getResources().getDisplayMetrics().density);
     }
 
-    /** getColor */
     private int color(int res) {
-        return getResources().getColor(res);
+        return androidx.core.content.ContextCompat.getColor(this, res);
     }
 
-    /** TextView con los parámetros más comunes*/
     private TextView txt(String texto, float sp, int colorRes, boolean bold) {
         TextView tv = new TextView(this);
         tv.setText(texto);
@@ -110,66 +122,11 @@ public class NotasActivity extends AppCompatActivity {
         return tv;
     }
 
-    /**Separador línea dorada*/
     private View separadorDorado() {
         View v = new View(this);
         v.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 1));
         v.setBackgroundColor(color(R.color.dorado_borde));
-        return v;
-    }
-
-    /**Separador línea gris*/
-    private View separadorBorde() {
-        View v = new View(this);
-        v.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1));
-        v.setBackgroundColor(color(R.color.borde));
-        return v;
-    }
-
-    /**separador (misiones, hechizos)*/
-    private void agregarSeparador(LinearLayout parent) {
-        View sep = new View(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        lp.setMargins(0, dp(3), 0, dp(3));
-        sep.setLayoutParams(lp);
-        sep.setBackgroundColor(color(R.color.borde));
-        parent.addView(sep);
-    }
-
-    /**columna para tarjeta de hechizo*/
-    private LinearLayout propCol(String etiqueta, String valor) {
-        LinearLayout col = new LinearLayout(this);
-        col.setOrientation(LinearLayout.VERTICAL);
-        col.setGravity(Gravity.CENTER);
-        col.setLayoutParams(new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-
-        TextView et = txt(etiqueta, 7, R.color.dorado_claro, false);
-        et.setGravity(Gravity.CENTER);
-        et.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        TextView val = txt(valor, 10, R.color.texto, false);
-        val.setGravity(Gravity.CENTER);
-        val.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        col.addView(et);
-        col.addView(val);
-        return col;
-    }
-
-    /**Separador vertical*/
-    private View propSep() {
-        View v = new View(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(1),
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        lp.setMargins(0, dp(4), 0, dp(4));
-        v.setLayoutParams(lp);
-        v.setBackgroundColor(color(R.color.borde));
         return v;
     }
 }

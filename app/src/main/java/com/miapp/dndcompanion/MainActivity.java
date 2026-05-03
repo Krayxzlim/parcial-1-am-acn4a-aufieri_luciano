@@ -1,11 +1,20 @@
 package com.miapp.dndcompanion;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -23,10 +32,19 @@ public class MainActivity extends AppCompatActivity {
     Random random = new Random();
     ArrayList<String> historial = new ArrayList<>();
 
+    //Animaciones
+    Animation animBtn, animDado, animMisionSale, animMisionEntra;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Precargar
+        animBtn        = AnimationUtils.loadAnimation(this, R.anim.btn_press);
+        animDado       = AnimationUtils.loadAnimation(this, R.anim.dado_roll);
+        animMisionSale = AnimationUtils.loadAnimation(this, R.anim.mision_aceptar);
+        animMisionEntra= AnimationUtils.loadAnimation(this, R.anim.mision_entrar);
 
         layoutDisponibles = findViewById(R.id.layoutDisponibles);
         layoutActivas     = findViewById(R.id.layoutActivas);
@@ -44,79 +62,240 @@ public class MainActivity extends AppCompatActivity {
         agregarSpell("Descarga de Escarcha", "TRUCO",
                 "Conjuración", "Acción", "60 pies", "1 criatura", "Instantáneo", false, false,
                 "Lanzas un rayo de frío contra una criatura. Realiza un ataque de hechizo a distancia. Si impacta, inflige 1d8 de daño de frío y la velocidad del objetivo se reduce en 10 pies hasta el inicio de tu siguiente turno.\n\nEl daño aumenta en 1d8 cuando alcanzas nivel 5 (2d8), nivel 11 (3d8) y nivel 17 (4d8).");
-
         agregarSpell("Mano Mágica", "TRUCO",
                 "Conjuración", "Acción", "30 pies", "Un objeto", "1 minuto", false, false,
                 "Una mano espectral flotante aparece en un punto elegido. Puede recoger o manipular objetos, abrir puertas, depositar objetos y usar herramientas sencillas.\n\nNo puede atacar, activar objetos mágicos ni cargar más de 10 libras.");
-
         agregarSpell("Escudo", "NIVEL 1",
                 "Abjuración", "Reacción", "Personal", "Tú mismo", "1 ronda", false, false,
                 "Una barrera invisible de fuerza mágica aparece para protegerte. Se activa cuando eres atacado o cuando una criatura te lanza Proyectil Mágico.\n\n+5 a la CA hasta el inicio de tu siguiente turno. Eres inmune a Proyectil Mágico este turno.");
-
         agregarSpell("Misiles Mágicos", "NIVEL 1",
                 "Evocación", "Acción", "120 pies", "Una o más criaturas", "Instantáneo", false, false,
                 "Creas tres dardos brillantes de fuerza mágica que impactan automáticamente. Cada dardo inflige 1d4+1 de daño de fuerza.\n\n*En niveles superiores:* el hechizo crea un dardo adicional por cada nivel por encima del 1.");
-
         agregarSpell("Armadura de Magia", "NIVEL 2",
                 "Abjuración", "Acción", "Toque", "Una criatura dispuesta", "8 horas", false, false,
                 "Tocas a una criatura dispuesta y la envuelves en protección mágica. Su CA se convierte en 13 + modificador de Destreza.\n\nEl hechizo finaliza si el objetivo equipa armadura.");
-
         agregarSpell("Bola de Fuego", "NIVEL 3",
                 "Evocación", "Acción", "150 pies", "Esfera 20 pies", "Instantáneo", true, false,
                 "Un destello brillante explota en un punto elegido. Cada criatura en el área realiza salvación de Destreza CD 14.\n\nFalla: 8d6 daño de fuego.\nÉxito: mitad del daño.\n\n*En niveles superiores:* +1d6 por cada nivel por encima del 3.");
 
-        // Dados
-        findViewById(R.id.btnD4).setOnClickListener(v  -> tirar(4));
-        findViewById(R.id.btnD6).setOnClickListener(v  -> tirar(6));
-        findViewById(R.id.btnD8).setOnClickListener(v  -> tirar(8));
-        findViewById(R.id.btnD10).setOnClickListener(v -> tirar(10));
-        findViewById(R.id.btnD12).setOnClickListener(v -> tirar(12));
-        findViewById(R.id.btnD20).setOnClickListener(v -> tirar(20));
-        findViewById(R.id.btnAleatorio).setOnClickListener(v -> {
-            int[] dados = {4, 6, 8, 10, 12, 20};
-            tirar(dados[random.nextInt(dados.length)]);
-        });
-        findViewById(R.id.btnHistorial).setOnClickListener(v -> mostrarHistorial());
+        configurarBtnDado(R.id.btnD4,  4);
+        configurarBtnDado(R.id.btnD6,  6);
+        configurarBtnDado(R.id.btnD8,  8);
+        configurarBtnDado(R.id.btnD10, 10);
+        configurarBtnDado(R.id.btnD12, 12);
+        configurarBtnDado(R.id.btnD20, 20);
 
-        //Agregar misión
-        findViewById(R.id.btnAgregar).setOnClickListener(v -> {
+        View btnAleatorio = findViewById(R.id.btnAleatorio);
+        btnAleatorio.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            int[] dados = {4, 6, 8, 10, 12, 20};
+            tirarConAnimacion(dados[random.nextInt(dados.length)]);
+        });
+
+        View btnHistorial = findViewById(R.id.btnHistorial);
+        btnHistorial.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(this::mostrarHistorial, 150);
+        });
+
+        View btnAgregar = findViewById(R.id.btnAgregar);
+        btnAgregar.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
             contador++;
             agregarMisionDisponible("Nueva misión " + contador, "Una misión misteriosa te aguarda.", "50 XP");
         });
 
-        //Menú inferior
         configurarMenu();
     }
 
-    private void configurarMenu() {
-        findViewById(R.id.menuInicio).setOnClickListener(v -> { /* ya estamos aquí */ });
 
-        findViewById(R.id.menuInventario).setOnClickListener(v -> {
+    // pulsar boton
+    private void pulsarYEjecutar(View v, Runnable accion) {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.btn_press);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation a) {}
+            @Override public void onAnimationRepeat(Animation a) {}
+            @Override public void onAnimationEnd(Animation a) { accion.run(); }
+        });
+        v.startAnimation(anim);
+    }
+
+
+    //anim tirada dado
+    private void configurarBtnDado(int btnId, int caras) {
+        View btn = findViewById(btnId);
+        btn.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> tirarConAnimacion(caras), 100);
+        });
+    }
+
+    private void tirarConAnimacion(int caras) {
+        int resultado = random.nextInt(caras) + 1;
+
+
+        View panelResultado = findViewById(R.id.txtResultado).getRootView()
+                .findViewWithTag("panelResultado");
+        final int DURACION_RULETA = 700;
+        final int INTERVALO = 80;
+        final int FLASHES = DURACION_RULETA / INTERVALO;
+        txtResultado.setText("?");
+        txtTipoDado.setText("d" + caras);
+
+        ObjectAnimator rotAnim = ObjectAnimator.ofFloat(txtResultado, "rotation", 0f, 360f);
+        rotAnim.setDuration(DURACION_RULETA);
+        rotAnim.setRepeatCount(0);
+        rotAnim.start();
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+        for (int i = 0; i < FLASHES; i++) {
+            final int idx = i;
+            handler.postDelayed(() -> {
+                int numRandom = random.nextInt(caras) + 1;
+                txtResultado.setText(String.valueOf(numRandom));
+                // Color oscila entre dorado y blanco
+                txtResultado.setTextColor(idx % 2 == 0
+                        ? color(R.color.dorado)
+                        : color(R.color.texto));
+            }, idx * INTERVALO);
+        }
+
+        handler.postDelayed(() -> {
+            historial.add(0, "d" + caras + "|" + resultado);
+            if (historial.size() > 20) historial.remove(historial.size() - 1);
+
+            int colorFinal;
+            String textoTipo;
+            if (caras == 20 && resultado == 1) {
+                colorFinal = Color.parseColor("#C05050");
+                textoTipo = "(d" + caras + ")  💀";
+            } else if (caras == 20 && resultado == 20) {
+                colorFinal = color(R.color.dorado);
+                textoTipo = "(d20)  ✦";
+            } else {
+                colorFinal = color(R.color.dorado);
+                textoTipo = "(d" + caras + ")";
+            }
+
+            txtResultado.setText(String.valueOf(resultado));
+            txtResultado.setTextColor(colorFinal);
+            txtTipoDado.setText(textoTipo);
+
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(txtResultado, "scaleX", 0.3f, 1.15f, 1.0f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(txtResultado, "scaleY", 0.3f, 1.15f, 1.0f);
+            scaleX.setDuration(400);
+            scaleY.setDuration(400);
+            scaleX.setInterpolator(new OvershootInterpolator(2.5f));
+            scaleY.setInterpolator(new OvershootInterpolator(2.5f));
+            scaleX.start();
+            scaleY.start();
+
+            //20 natural: color pulsante
+            if (caras == 20 && resultado == 20) {
+                ObjectAnimator pulso = ObjectAnimator.ofFloat(txtResultado, "alpha", 1f, 0.3f, 1f);
+                pulso.setDuration(300);
+                pulso.setRepeatCount(3);
+                pulso.setStartDelay(400);
+                pulso.start();
+            }
+
+        }, DURACION_RULETA + 50);
+    }
+
+    // ANIMACIÓN MISIÓN
+    private void aceptarMisionConAnimacion(String nombre, String recompensa, LinearLayout itemDisponible) {
+        Animation salida = AnimationUtils.loadAnimation(this, R.anim.mision_aceptar);
+        salida.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation a) {}
+            @Override public void onAnimationRepeat(Animation a) {}
+            @Override public void onAnimationEnd(Animation a) {
+
+                // eliminar el item
+                layoutDisponibles.removeView(itemDisponible);
+
+                // 👇 eliminar SU separador asociado
+                View separador = (View) itemDisponible.getTag();
+                if (separador != null) {
+                    layoutDisponibles.removeView(separador);
+                }
+
+                agregarMisionActivaAnimada(nombre, recompensa);
+            }
+        });
+        itemDisponible.startAnimation(salida);
+    }
+
+    private void agregarMisionActivaAnimada(String nombre, String recompensa) {
+        if (layoutActivas.getChildCount() > 0) agregarSeparador(layoutActivas);
+
+        LinearLayout item = buildItemMisionActiva(nombre, recompensa);
+        layoutActivas.addView(item);
+
+
+        Animation entrada = AnimationUtils.loadAnimation(this, R.anim.mision_entrar);
+        item.startAnimation(entrada);
+    }
+    private LinearLayout buildItemMisionActiva(String nombre, String recompensa) {
+        LinearLayout item = new LinearLayout(this);
+        item.setOrientation(LinearLayout.HORIZONTAL);
+        item.setPadding(0, dp(10), 0, dp(10));
+        item.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView icono = new TextView(this);
+        icono.setText("⚔️");
+        icono.setTextSize(22);
+        icono.setPadding(0, 0, dp(10), 0);
+        icono.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        info.addView(txt(nombre, 13, R.color.texto, true));
+        info.addView(txt("Recompensa:  " + recompensa, 11, R.color.dorado_claro, false));
+
+        TextView badge = new TextView(this);
+        badge.setText("EN CURSO");
+        badge.setTextColor(color(R.color.dorado));
+        badge.setTextSize(9);
+        badge.setPadding(dp(8), dp(4), dp(8), dp(4));
+        badge.setBackgroundColor(color(R.color.boton_bg));
+
+        item.addView(icono);
+        item.addView(info);
+        item.addView(badge);
+        return item;
+    }
+
+    // MENÚ INFERIOR
+    private void configurarMenu() {
+        View menuInicio = findViewById(R.id.menuInicio);
+        menuInicio.setOnClickListener(v ->
+                v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press))
+        );
+
+        View menuInventario = findViewById(R.id.menuInventario);
+        menuInventario.setOnClickListener(v -> pulsarYEjecutar(v, () -> {
             startActivity(new Intent(this, InventarioActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        });
+        }));
 
-        findViewById(R.id.menuNotas).setOnClickListener(v -> {
+        View menuNotas = findViewById(R.id.menuNotas);
+        menuNotas.setOnClickListener(v -> pulsarYEjecutar(v, () -> {
             startActivity(new Intent(this, NotasActivity.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        });
+        }));
 
-        findViewById(R.id.menuAjustes).setOnClickListener(v ->
+        View menuAjustes = findViewById(R.id.menuAjustes);
+        menuAjustes.setOnClickListener(v -> pulsarYEjecutar(v, () ->
                 mostrarDialogoEstetico("Ajustes",
                         "⚙️  Los ajustes estarán\ndisponibles en la próxima versión.")
-        );
+        ));
     }
 
-    private void tirar(int caras) {
-        int resultado = random.nextInt(caras) + 1;
-        txtResultado.setText(String.valueOf(resultado));
-        txtTipoDado.setText("(d" + caras + ")");
-        historial.add(0, "d" + caras + "|" + resultado);
-        if (historial.size() > 20) historial.remove(historial.size() - 1);
-    }
-
+    // HISTORIAL
     private void mostrarHistorial() {
-
         LinearLayout raiz = new LinearLayout(this);
         raiz.setOrientation(LinearLayout.VERTICAL);
         raiz.setBackgroundResource(R.drawable.seccion_bg);
@@ -131,23 +310,17 @@ public class MainActivity extends AppCompatActivity {
         filaTitulo.setOrientation(LinearLayout.HORIZONTAL);
         filaTitulo.setGravity(Gravity.CENTER_VERTICAL);
 
-        TextView estrella1 = txt("✦", 14, R.color.dorado, false);
-        estrella1.setPadding(0, 0, dp(8), 0);
-
+        TextView e1 = txt("✦", 14, R.color.dorado, false);
+        e1.setPadding(0, 0, dp(8), 0);
         TextView titulo = txt("HISTORIAL DE TIRADAS", 14, R.color.dorado, true);
-        titulo.setFontVariationSettings(null);
         titulo.setTypeface(Typeface.create("serif", Typeface.BOLD));
+        TextView e2 = txt("✦", 14, R.color.dorado, false);
+        e2.setPadding(dp(8), 0, 0, 0);
 
-        TextView estrella2 = txt("✦", 14, R.color.dorado, false);
-        estrella2.setPadding(dp(8), 0, 0, 0);
-
-        filaTitulo.addView(estrella1);
-        filaTitulo.addView(titulo);
-        filaTitulo.addView(estrella2);
+        filaTitulo.addView(e1); filaTitulo.addView(titulo); filaTitulo.addView(e2);
         encabezado.addView(filaTitulo);
 
-        TextView subtitulo = txt(
-                historial.isEmpty() ? "Sin tiradas registradas" :
+        TextView subtitulo = txt(historial.isEmpty() ? "Sin tiradas registradas" :
                         "Últimas " + Math.min(historial.size(), 15) + " tiradas",
                 10, R.color.texto_secundario, false);
         subtitulo.setGravity(Gravity.CENTER);
@@ -156,15 +329,12 @@ public class MainActivity extends AppCompatActivity {
         subLp.setMargins(0, dp(4), 0, 0);
         subtitulo.setLayoutParams(subLp);
         encabezado.addView(subtitulo);
-
         raiz.addView(encabezado);
-
         raiz.addView(separadorDorado());
 
         ScrollView scroll = new ScrollView(this);
-        LinearLayout.LayoutParams scrollLp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dp(300));
-        scroll.setLayoutParams(scrollLp);
+        scroll.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(300)));
         scroll.setBackgroundColor(color(R.color.fondo));
 
         LinearLayout lista = new LinearLayout(this);
@@ -176,21 +346,17 @@ public class MainActivity extends AppCompatActivity {
             vacio.setOrientation(LinearLayout.VERTICAL);
             vacio.setGravity(Gravity.CENTER);
             vacio.setPadding(0, dp(40), 0, dp(40));
-
             TextView ico = txt("🎲", 36, R.color.borde, false);
             ico.setGravity(Gravity.CENTER);
             ico.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
             TextView msg = txt("Aún no tiraste ningún dado", 13, R.color.texto_secundario, false);
             msg.setGravity(Gravity.CENTER);
             LinearLayout.LayoutParams msgLp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             msgLp.setMargins(0, dp(8), 0, 0);
             msg.setLayoutParams(msgLp);
-
-            vacio.addView(ico);
-            vacio.addView(msg);
+            vacio.addView(ico); vacio.addView(msg);
             lista.addView(vacio);
         } else {
             int mostrar = Math.min(historial.size(), 15);
@@ -205,9 +371,8 @@ public class MainActivity extends AppCompatActivity {
                 fila.setOrientation(LinearLayout.HORIZONTAL);
                 fila.setGravity(Gravity.CENTER_VERTICAL);
                 fila.setPadding(dp(16), dp(10), dp(16), dp(10));
-                fila.setBackgroundColor(i % 2 == 0
-                        ? color(R.color.seccion_fondo)
-                        : color(R.color.fondo));
+                fila.setBackgroundColor(i % 2 == 0 ? color(R.color.seccion_fondo) : color(R.color.fondo));
+
                 TextView numView = txt("#" + (i + 1), 10, R.color.borde, false);
                 numView.setGravity(Gravity.CENTER);
                 numView.setTypeface(Typeface.MONOSPACE);
@@ -231,17 +396,13 @@ public class MainActivity extends AppCompatActivity {
                 View spacer = new View(this);
                 spacer.setLayoutParams(new LinearLayout.LayoutParams(0,
                         LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+
                 int colorRes;
                 String sufijo = "";
-                if (val == 1) {
-                    colorRes = 0;
-                    sufijo = "  💀";
-                } else if (tipoDado.equals("d20") && val == 20) {
-                    colorRes = R.color.dorado;
-                    sufijo = "  ✦";
-                } else {
-                    colorRes = R.color.texto;
-                }
+                if (val == 1) { colorRes = 0; sufijo = "  💀"; }
+                else if (tipoDado.equals("d20") && val == 20) { colorRes = R.color.dorado; sufijo = "  ✦"; }
+                else { colorRes = R.color.texto; }
+
                 TextView resView = new TextView(this);
                 resView.setText(valStr + sufijo);
                 resView.setTextSize(20);
@@ -250,17 +411,14 @@ public class MainActivity extends AppCompatActivity {
                 if (colorRes == 0) resView.setTextColor(Color.parseColor("#C05050"));
                 else resView.setTextColor(color(colorRes));
 
-                fila.addView(numView);
-                fila.addView(badgeDado);
-                fila.addView(spacer);
-                fila.addView(resView);
+                fila.addView(numView); fila.addView(badgeDado);
+                fila.addView(spacer); fila.addView(resView);
                 lista.addView(fila);
             }
         }
 
         scroll.addView(lista);
         raiz.addView(scroll);
-
         raiz.addView(separadorDorado());
 
         Button cerrar = new Button(this);
@@ -268,8 +426,7 @@ public class MainActivity extends AppCompatActivity {
         cerrar.setTextColor(color(R.color.dorado));
         cerrar.setTextSize(12);
         cerrar.setTypeface(Typeface.create("serif", Typeface.BOLD));
-        cerrar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                color(R.color.boton_bg)));
+        cerrar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
         LinearLayout.LayoutParams cerrarLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(44));
         cerrarLp.setMargins(dp(16), dp(10), dp(16), dp(16));
@@ -277,16 +434,17 @@ public class MainActivity extends AppCompatActivity {
         raiz.addView(cerrar);
 
         AlertDialog dialog = new AlertDialog.Builder(this, R.style.DialogoOscuro)
-                .setView(raiz)
-                .create();
-
-        if (dialog.getWindow() != null) {
+                .setView(raiz).create();
+        if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-
-        cerrar.setOnClickListener(v -> dialog.dismiss());
+        cerrar.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(dialog::dismiss, 150);
+        });
         dialog.show();
     }
+
+    // SPELLCARDS
     private void mostrarTarjetaHechizo(String nombre, String nivel, String escuela,
                                        String tiempo, String alcance, String objetivo,
                                        String duracion, boolean concentracion, boolean ritual,
@@ -326,7 +484,6 @@ public class MainActivity extends AppCompatActivity {
         TextView escuelaView = txt(escuela.toUpperCase(), 10, R.color.texto_secundario, false);
         escuelaView.setLayoutParams(new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-
         filaBadge.addView(badgeView);
         filaBadge.addView(escuelaView);
 
@@ -356,7 +513,6 @@ public class MainActivity extends AppCompatActivity {
         nomView.setLayoutParams(nomLp);
         cab.addView(nomView);
         card.addView(cab);
-
         card.addView(separadorDorado());
 
         LinearLayout props = new LinearLayout(this);
@@ -371,13 +527,11 @@ public class MainActivity extends AppCompatActivity {
         props.addView(propSep());
         props.addView(propCol("DURACIÓN", duracion));
         card.addView(props);
-
         card.addView(separadorBorde());
 
         ScrollView descScroll = new ScrollView(this);
         descScroll.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(220)));
-
         TextView descView = new TextView(this);
         descView.setText(descripcion);
         descView.setTextColor(color(R.color.texto));
@@ -386,7 +540,6 @@ public class MainActivity extends AppCompatActivity {
         descView.setLineSpacing(dp(3), 1.0f);
         descScroll.addView(descView);
         card.addView(descScroll);
-
         card.addView(separadorDorado());
 
         Button cerrar = new Button(this);
@@ -394,8 +547,7 @@ public class MainActivity extends AppCompatActivity {
         cerrar.setTextColor(color(R.color.dorado));
         cerrar.setTextSize(12);
         cerrar.setTypeface(Typeface.create("serif", Typeface.BOLD));
-        cerrar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                color(R.color.boton_bg)));
+        cerrar.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
         LinearLayout.LayoutParams cLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, dp(44));
         cLp.setMargins(dp(16), dp(10), dp(16), dp(16));
@@ -403,13 +555,17 @@ public class MainActivity extends AppCompatActivity {
         card.addView(cerrar);
 
         AlertDialog dialog = new AlertDialog.Builder(this, R.style.DialogoOscuro)
-                .setView(card)
-                .create();
+                .setView(card).create();
         if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        cerrar.setOnClickListener(v -> dialog.dismiss());
+        cerrar.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(dialog::dismiss, 150);
+        });
         dialog.show();
     }
+
+    // HECHIZOS
     private void agregarSpell(String nombre, String nivel, String escuela,
                               String tiempo, String alcance, String objetivo,
                               String duracion, boolean concentracion, boolean ritual,
@@ -444,86 +600,70 @@ public class MainActivity extends AppCompatActivity {
         TextView txtNombre = txt(nombre, 13, R.color.texto, false);
         txtNombre.setLayoutParams(new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-
         TextView arrow = txt("›", 16, R.color.dorado_borde, false);
 
-        item.addView(badgeView);
-        item.addView(txtNombre);
-        item.addView(arrow);
+        item.addView(badgeView); item.addView(txtNombre); item.addView(arrow);
 
-        item.setOnClickListener(v -> mostrarTarjetaHechizo(
-                nombre, nivel, escuela, tiempo, alcance, objetivo,
-                duracion, concentracion, ritual, descripcion));
+        item.setOnClickListener(v -> {
+            // Animación de pulsación en la fila
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(() ->
+                    mostrarTarjetaHechizo(nombre, nivel, escuela, tiempo, alcance,
+                            objetivo, duracion, concentracion, ritual, descripcion), 150);
+        });
 
         layoutSpells.addView(item);
     }
+
+    // MISIONES
     private void agregarMisionDisponible(String nombre, String descripcion, String recompensa) {
-        if (layoutDisponibles.getChildCount() > 0) agregarSeparador(layoutDisponibles);
+        View separador = null;
+
+        if (layoutDisponibles.getChildCount() > 0) {
+            separador = agregarSeparadorConTag(layoutDisponibles);
+        }
 
         LinearLayout item = new LinearLayout(this);
         item.setOrientation(LinearLayout.HORIZONTAL);
         item.setPadding(0, dp(10), 0, dp(10));
         item.setGravity(Gravity.CENTER_VERTICAL);
+
+        item.setTag(separador);
 
         TextView icono = new TextView(this);
         icono.setText("📜");
         icono.setTextSize(22);
         icono.setPadding(0, 0, dp(10), 0);
-        icono.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         LinearLayout info = new LinearLayout(this);
         info.setOrientation(LinearLayout.VERTICAL);
         info.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
 
-        TextView tn = txt(nombre, 13, R.color.texto, true);
-        TextView td = txt(descripcion, 11, R.color.texto_secundario, false);
-        TextView tx = txt("Recompensa:  " + recompensa, 11, R.color.dorado_claro, false);
-        info.addView(tn); info.addView(td); info.addView(tx);
+        info.addView(txt(nombre, 13, R.color.texto, true));
+        info.addView(txt(descripcion, 11, R.color.texto_secundario, false));
+        info.addView(txt("Recompensa:  " + recompensa, 11, R.color.dorado_claro, false));
 
-        Button btn = new Button(this);
+        androidx.appcompat.widget.AppCompatButton btn =
+                new androidx.appcompat.widget.AppCompatButton(this);
         btn.setText("ACEPTAR");
         btn.setTextSize(10);
         btn.setTextColor(color(R.color.dorado));
-        btn.setBackgroundTintList(android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
-        btn.setOnClickListener(v -> agregarMisionActiva(nombre, recompensa, item));
+        btn.setBackgroundColor(color(R.color.boton_bg));
 
-        item.addView(icono); item.addView(info); item.addView(btn);
+        btn.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> aceptarMisionConAnimacion(nombre, recompensa, item), 120);
+        });
+
+        item.addView(icono);
+        item.addView(info);
+        item.addView(btn);
+
         layoutDisponibles.addView(item);
     }
 
-    private void agregarMisionActiva(String nombre, String recompensa, LinearLayout eliminar) {
-        layoutDisponibles.removeView(eliminar);
-        if (layoutActivas.getChildCount() > 0) agregarSeparador(layoutActivas);
-
-        LinearLayout item = new LinearLayout(this);
-        item.setOrientation(LinearLayout.HORIZONTAL);
-        item.setPadding(0, dp(10), 0, dp(10));
-        item.setGravity(Gravity.CENTER_VERTICAL);
-
-        TextView icono = new TextView(this);
-        icono.setText("⚔️");
-        icono.setTextSize(22);
-        icono.setPadding(0, 0, dp(10), 0);
-        icono.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        LinearLayout info = new LinearLayout(this);
-        info.setOrientation(LinearLayout.VERTICAL);
-        info.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-        info.addView(txt(nombre, 13, R.color.texto, true));
-        info.addView(txt("Recompensa:  " + recompensa, 11, R.color.dorado_claro, false));
-
-        TextView badge = new TextView(this);
-        badge.setText("EN CURSO");
-        badge.setTextColor(color(R.color.dorado));
-        badge.setTextSize(9);
-        badge.setPadding(dp(8), dp(4), dp(8), dp(4));
-        badge.setBackgroundColor(color(R.color.boton_bg));
-
-        item.addView(icono); item.addView(info); item.addView(badge);
-        layoutActivas.addView(item);
-    }
+    // formato alerts
     private void mostrarDialogoEstetico(String titulo, String mensaje) {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -534,7 +674,6 @@ public class MainActivity extends AppCompatActivity {
         t.setTypeface(Typeface.create("serif", Typeface.BOLD));
         t.setGravity(Gravity.CENTER);
         root.addView(t);
-
         root.addView(separadorDorado());
 
         TextView m = txt(mensaje, 13, R.color.texto, false);
@@ -544,7 +683,6 @@ public class MainActivity extends AppCompatActivity {
         mLp.setMargins(0, dp(12), 0, dp(12));
         m.setLayoutParams(mLp);
         root.addView(m);
-
         root.addView(separadorDorado());
 
         Button b = new Button(this);
@@ -561,20 +699,21 @@ public class MainActivity extends AppCompatActivity {
                 .setView(root).create();
         if (d.getWindow() != null)
             d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        b.setOnClickListener(v -> d.dismiss());
+        b.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(d::dismiss, 150);
+        });
         d.show();
     }
-    /** dp a px */
+
     private int dp(int val) {
         return Math.round(val * getResources().getDisplayMetrics().density);
     }
 
-    /** getColor */
     private int color(int res) {
-        return getResources().getColor(res);
+        return androidx.core.content.ContextCompat.getColor(this, res);
     }
 
-    /** TextView con los parámetros más comunes*/
     private TextView txt(String texto, float sp, int colorRes, boolean bold) {
         TextView tv = new TextView(this);
         tv.setText(texto);
@@ -586,7 +725,6 @@ public class MainActivity extends AppCompatActivity {
         return tv;
     }
 
-    /**Separador línea dorada*/
     private View separadorDorado() {
         View v = new View(this);
         v.setLayoutParams(new LinearLayout.LayoutParams(
@@ -595,7 +733,6 @@ public class MainActivity extends AppCompatActivity {
         return v;
     }
 
-    /**Separador línea gris*/
     private View separadorBorde() {
         View v = new View(this);
         v.setLayoutParams(new LinearLayout.LayoutParams(
@@ -604,7 +741,6 @@ public class MainActivity extends AppCompatActivity {
         return v;
     }
 
-    /**separador (misiones, hechizos)*/
     private void agregarSeparador(LinearLayout parent) {
         View sep = new View(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -615,7 +751,18 @@ public class MainActivity extends AppCompatActivity {
         parent.addView(sep);
     }
 
-    /**columna para tarjeta de hechizo*/
+    private View agregarSeparadorConTag(LinearLayout parent) {
+        View sep = new View(this);
+        sep.setTag("separador");
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        lp.setMargins(0, dp(3), 0, dp(3));
+        sep.setLayoutParams(lp);
+        sep.setBackgroundColor(color(R.color.borde));
+        parent.addView(sep);
+        return sep;
+    }
+
     private LinearLayout propCol(String etiqueta, String valor) {
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
@@ -633,12 +780,10 @@ public class MainActivity extends AppCompatActivity {
         val.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        col.addView(et);
-        col.addView(val);
+        col.addView(et); col.addView(val);
         return col;
     }
 
-    /**Separador vertical*/
     private View propSep() {
         View v = new View(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(1),
