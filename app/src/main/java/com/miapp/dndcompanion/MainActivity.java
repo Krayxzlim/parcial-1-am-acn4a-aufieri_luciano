@@ -20,11 +20,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.Random;
+import android.net.Uri;
+import android.widget.ImageView;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class MainActivity extends AppCompatActivity {
 
     LinearLayout layoutDisponibles, layoutActivas, layoutSpells;
     TextView txtResultado, txtTipoDado;
+    ImageView imgAvatar;
+    ActivityResultLauncher<String> pickImageLauncher;
     int contador = 0;
     Random random = new Random();
     ArrayList<String> historial = new ArrayList<>();
@@ -32,9 +38,20 @@ public class MainActivity extends AppCompatActivity {
     //Animaciones
     Animation animBtn, animDado, animMisionSale, animMisionEntra;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        imgAvatar.setImageURI(uri);
+                    }
+                }
+        );
         setContentView(R.layout.activity_main);
 
         // Precargar
@@ -48,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
         layoutSpells      = findViewById(R.id.layoutSpells);
         txtResultado      = findViewById(R.id.txtResultado);
         txtTipoDado       = findViewById(R.id.txtTipoDado);
+
+        imgAvatar = findViewById(R.id.imgAvatar);
+        imgAvatar.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            pickImageLauncher.launch("image/*");
+        });
 
         // Misiones
         agregarMisionDisponible("Entrega especial",
@@ -131,9 +154,6 @@ public class MainActivity extends AppCompatActivity {
     private void tirarConAnimacion(int caras) {
         int resultado = random.nextInt(caras) + 1;
 
-
-        View panelResultado = findViewById(R.id.txtResultado).getRootView()
-                .findViewWithTag("panelResultado");
         final int DURACION_RULETA = 700;
         final int INTERVALO = 80;
         final int FLASHES = DURACION_RULETA / INTERVALO;
@@ -425,7 +445,6 @@ public class MainActivity extends AppCompatActivity {
                 lista.addView(fila);
             }
         }
-
         scroll.addView(lista);
         raiz.addView(scroll);
         raiz.addView(separadorDorado());

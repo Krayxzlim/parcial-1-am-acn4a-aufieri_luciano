@@ -1,45 +1,33 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="120dp"
-    android:height="120dp"
+    android:width="76dp"
+    android:height="125dp"
     android:viewportWidth="120"
     android:viewportHeight="120">
 
-    <!-- Fondo -->
-    <path
-        android:fillColor="@color/stat_fondo"
-        android:pathData="M2,2 L118,2 L118,118 L2,118 Z"/>
-
-    <!-- Borde exterior dorado -->
     <path
         android:strokeColor="@color/dorado_borde"
-        android:strokeWidth="2"
+        android:strokeWidth="3"
         android:fillColor="@android:color/transparent"
         android:pathData="M2,2 L118,2 L118,118 L2,118 Z"/>
 
-    <!-- Borde interior oscuro -->
     <path
-        android:strokeColor="#3A2F1B"
+        android:strokeColor="@color/dorado"
         android:strokeWidth="1.5"
         android:fillColor="@android:color/transparent"
         android:pathData="M6,6 L114,6 L114,114 L6,114 Z"/>
 
-    <!-- Esquinas ornamentales -->
-    <!-- superior izquierda -->
     <path
         android:fillColor="@color/dorado_borde"
         android:pathData="M2,2 L14,2 L2,14 Z"/>
 
-    <!-- superior derecha -->
     <path
         android:fillColor="@color/dorado_borde"
         android:pathData="M118,2 L106,2 L118,14 Z"/>
 
-    <!-- inferior izquierda -->
     <path
         android:fillColor="@color/dorado_borde"
         android:pathData="M2,118 L14,118 L2,106 Z"/>
 
-    <!-- inferior derecha -->
     <path
         android:fillColor="@color/dorado_borde"
         android:pathData="M118,118 L106,118 L118,106 Z"/>

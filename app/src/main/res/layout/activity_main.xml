@@ -94,20 +94,29 @@
                         android:layout_width="176dp" android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp">
 
-                        <LinearLayout
+
+                        <FrameLayout
                             android:layout_width="76dp"
                             android:layout_height="125dp"
-                            android:layout_marginEnd="6dp"
-                            android:background="@drawable/avatar_bg"
-                            android:gravity="center">
+                            android:layout_marginEnd="6dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="⚔"
-                                android:textColor="@color/dorado"
-                                android:textSize="30sp" />
-                        </LinearLayout>
+                            <ImageView
+                                android:id="@+id/imgAvatar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/avatar"
+                                android:contentDescription="Avatar del personaje"
+                                android:clickable="true"
+                                android:focusable="true"/>
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/avatar_bg"
+                                android:clickable="false"/>
+                        </FrameLayout>
+
 
                         <LinearLayout android:orientation="vertical" android:gravity="center_vertical"
                             android:layout_width="0dp" android:layout_height="105dp" android:layout_weight="1">

@@ -24,7 +24,6 @@ public class NotasActivity extends AppCompatActivity {
 
         configurarMenu();
 
-        // Botón guardar nota
         findViewById(R.id.btnGuardarNota).setOnClickListener(v ->
                 Toast.makeText(this, "✦ Nota guardada", Toast.LENGTH_SHORT).show()
         );
