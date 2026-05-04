@@ -1,9 +1,6 @@
 package com.miapp.dndcompanion;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -204,37 +201,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // ANIMACIÓN MISIÓN
-    private void aceptarMisionConAnimacion(String nombre, String recompensa, LinearLayout itemDisponible) {
-        Animation salida = AnimationUtils.loadAnimation(this, R.anim.mision_aceptar);
-        salida.setAnimationListener(new Animation.AnimationListener() {
-            @Override public void onAnimationStart(Animation a) {}
-            @Override public void onAnimationRepeat(Animation a) {}
-            @Override public void onAnimationEnd(Animation a) {
+    private void aceptarMisionConAnimacion(String nombre, String recompensa, LinearLayout wrapper) {
+        if (wrapper.getParent() == null) return;
+        if (Boolean.TRUE.equals(wrapper.getTag())) return;
+        wrapper.setTag(true);
 
-                // eliminar el item
-                layoutDisponibles.removeView(itemDisponible);
-
-                // 👇 eliminar SU separador asociado
-                View separador = (View) itemDisponible.getTag();
-                if (separador != null) {
-                    layoutDisponibles.removeView(separador);
-                }
-
-                agregarMisionActivaAnimada(nombre, recompensa);
-            }
-        });
-        itemDisponible.startAnimation(salida);
+        wrapper.animate()
+                .alpha(0f)
+                .translationX(200f)
+                .setDuration(250)
+                .withEndAction(() -> {
+                    wrapper.clearAnimation();
+                    wrapper.post(() -> {
+                        if (wrapper.getParent() != null) {
+                            layoutDisponibles.removeView(wrapper);
+                        }
+                        if (layoutDisponibles.getChildCount() > 0) {
+                            View primerChild = layoutDisponibles.getChildAt(0);
+                            if (primerChild instanceof LinearLayout) {
+                                LinearLayout primerWrapper = (LinearLayout) primerChild;
+                                if (primerWrapper.getChildCount() > 0
+                                        && "sep".equals(primerWrapper.getChildAt(0).getTag())) {
+                                    primerWrapper.removeViewAt(0);
+                                }
+                            }
+                        }
+                        agregarMisionActivaAnimada(nombre, recompensa);
+                    });
+                })
+                .start();
     }
 
     private void agregarMisionActivaAnimada(String nombre, String recompensa) {
         if (layoutActivas.getChildCount() > 0) agregarSeparador(layoutActivas);
-
         LinearLayout item = buildItemMisionActiva(nombre, recompensa);
         layoutActivas.addView(item);
 
-
-        Animation entrada = AnimationUtils.loadAnimation(this, R.anim.mision_entrar);
-        item.startAnimation(entrada);
+        item.setAlpha(0f);
+        item.setTranslationX(-200f);
+        item.animate()
+                .alpha(1f)
+                .translationX(0f)
+                .setDuration(250)
+                .start();
     }
     private LinearLayout buildItemMisionActiva(String nombre, String recompensa) {
         LinearLayout item = new LinearLayout(this);
@@ -617,10 +626,18 @@ public class MainActivity extends AppCompatActivity {
 
     // MISIONES
     private void agregarMisionDisponible(String nombre, String descripcion, String recompensa) {
-        View separador = null;
+        LinearLayout wrapper = new LinearLayout(this);
+        wrapper.setOrientation(LinearLayout.VERTICAL);
 
         if (layoutDisponibles.getChildCount() > 0) {
-            separador = agregarSeparadorConTag(layoutDisponibles);
+            View sep = new View(this);
+            sep.setTag("sep");
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            lp.setMargins(0, dp(3), 0, dp(3));
+            sep.setLayoutParams(lp);
+            sep.setBackgroundColor(color(R.color.borde));
+            wrapper.addView(sep);
         }
 
         LinearLayout item = new LinearLayout(this);
@@ -628,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
         item.setPadding(0, dp(10), 0, dp(10));
         item.setGravity(Gravity.CENTER_VERTICAL);
 
-        item.setTag(separador);
+        item.setTag(wrapper);
 
         TextView icono = new TextView(this);
         icono.setText("📜");
@@ -651,16 +668,18 @@ public class MainActivity extends AppCompatActivity {
         btn.setBackgroundColor(color(R.color.boton_bg));
 
         btn.setOnClickListener(v -> {
-            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            btn.setEnabled(false);
+            btn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
             new Handler(Looper.getMainLooper()).postDelayed(
-                    () -> aceptarMisionConAnimacion(nombre, recompensa, item), 120);
+                    () -> aceptarMisionConAnimacion(nombre, recompensa, wrapper), 120);
         });
 
         item.addView(icono);
         item.addView(info);
         item.addView(btn);
 
-        layoutDisponibles.addView(item);
+        wrapper.addView(item);
+        layoutDisponibles.addView(wrapper);
     }
 
     // formato alerts
@@ -750,19 +769,6 @@ public class MainActivity extends AppCompatActivity {
         sep.setBackgroundColor(color(R.color.borde));
         parent.addView(sep);
     }
-
-    private View agregarSeparadorConTag(LinearLayout parent) {
-        View sep = new View(this);
-        sep.setTag("separador");
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        lp.setMargins(0, dp(3), 0, dp(3));
-        sep.setLayoutParams(lp);
-        sep.setBackgroundColor(color(R.color.borde));
-        parent.addView(sep);
-        return sep;
-    }
-
     private LinearLayout propCol(String etiqueta, String valor) {
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
