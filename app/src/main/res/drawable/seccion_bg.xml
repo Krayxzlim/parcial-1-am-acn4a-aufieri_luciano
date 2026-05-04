@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Borde dorado -->
+
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/dorado_borde"/>
-            <corners android:radius="6dp"/>
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#70000000"
+                android:endColor="#40000000"/>
         </shape>
     </item>
-    <!-- Fondo interior -->
-    <item android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp">
+
+    <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/seccion_fondo"/>
-            <corners android:radius="5dp"/>
+            <stroke android:width="1dp" android:color="#C9A84C"/>
+            <solid android:color="@android:color/transparent"/>
         </shape>
     </item>
+
+    <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <stroke android:width="1dp" android:color="#5A4A20"/>
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
+
 </layer-list>

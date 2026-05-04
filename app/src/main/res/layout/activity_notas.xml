@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/fondo"
+    android:background="@drawable/fondo"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -38,166 +38,234 @@
             android:padding="8dp">
 
             <!-- Diario -->
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" android:padding="10dp"
-                android:background="@drawable/seccion_bg">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="📜" android:textSize="14sp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <TextView android:text="DIARIO DE AVENTURAS" android:textColor="@color/dorado"
-                        android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                    <Button android:id="@+id/btnNuevaNota"
-                        android:text="＋" android:textColor="@color/dorado"
-                        android:backgroundTint="@color/boton_bg" android:textSize="14sp"
-                        android:layout_width="36dp" android:layout_height="30dp" android:padding="0dp"/>
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/seccion_bg"/>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <!-- Nota 1 -->
-                <LinearLayout android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:padding="8dp"
-                    android:background="@drawable/stat_bg">
                     <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp">
-                        <TextView android:text="Sesión 1 — La Taberna del Oso" android:textColor="@color/dorado_claro"
-                            android:textSize="12sp" android:textStyle="bold"
-                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                        <TextView android:text="12/04" android:textColor="@color/texto_secundario"
-                            android:textSize="10sp"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="📜" android:textSize="14sp"
+                            android:layout_marginEnd="6dp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:text="DIARIO DE AVENTURAS" android:textColor="@color/dorado"
+                            android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                        <Button android:id="@+id/btnNuevaNota"
+                            android:text="＋" android:textColor="@color/dorado"
+                            android:backgroundTint="@color/boton_bg" android:textSize="14sp"
+                            android:layout_width="36dp" android:layout_height="30dp" android:padding="0dp"/>
                     </LinearLayout>
-                    <TextView android:text="Nos encontramos con el mercader Harwick. Mencionó que los caminos al norte están infestados de bandidos. Dijo que hay algo más detrás de los ataques..."
-                        android:textColor="@color/texto" android:textSize="12sp"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/borde"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
+
+                    <!-- Nota 1 -->
+                    <LinearLayout android:orientation="vertical"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp" android:padding="8dp"
+                        android:background="@drawable/stat_bg">
+                        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:text="Sesión 1 — La Taberna del Oso" android:textColor="@color/dorado_claro"
+                                android:textSize="12sp" android:textStyle="bold"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                            <TextView android:text="12/04" android:textColor="@color/texto_secundario"
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        <TextView android:text="Nos encontramos con el mercader Harwick. Mencionó que los caminos al norte están infestados de bandidos. Dijo que hay algo más detrás de los ataques..."
+                            android:textColor="@color/texto" android:textSize="12sp"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <!-- Nota 2 -->
+                    <LinearLayout android:orientation="vertical"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:background="@drawable/stat_bg">
+                        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp">
+                            <TextView android:text="Sesión 2 — Las Colinas del Eco" android:textColor="@color/dorado_claro"
+                                android:textSize="12sp" android:textStyle="bold"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                            <TextView android:text="19/04" android:textColor="@color/texto_secundario"
+                                android:textSize="10sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        <TextView android:text="Encontramos la cripta. Había un símbolo grabado en la puerta: una serpiente devorando su propia cola. Zorathis mencionó haberlo visto antes."
+                            android:textColor="@color/texto" android:textSize="12sp"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Nota 2 -->
-                <LinearLayout android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:background="@drawable/stat_bg">
-                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp">
-                        <TextView android:text="Sesión 2 — Las Colinas del Eco" android:textColor="@color/dorado_claro"
-                            android:textSize="12sp" android:textStyle="bold"
-                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                        <TextView android:text="19/04" android:textColor="@color/texto_secundario"
-                            android:textSize="10sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <TextView android:text="Encontramos la cripta. Había un símbolo grabado en la puerta: una serpiente devorando su propia cola. Zorathis mencionó haberlo visto antes."
-                        android:textColor="@color/texto" android:textSize="12sp"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </LinearLayout>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|start" android:src="@drawable/esquina" android:rotation="0"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|end" android:src="@drawable/esquina" android:rotation="90"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|start" android:src="@drawable/esquina" android:rotation="270"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|end" android:src="@drawable/esquina" android:rotation="180"/>
+            </FrameLayout>
+
 
             <!-- NPCs conocidos -->
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" android:padding="10dp"
-                android:background="@drawable/seccion_bg">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="👥" android:textSize="14sp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <TextView android:text="NPCs CONOCIDOS" android:textColor="@color/dorado"
-                        android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/seccion_bg"/>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="6dp" android:layout_marginBottom="6dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingTop="6dp" android:paddingBottom="6dp"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="🟢" android:textSize="10sp" android:layout_marginEnd="8dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <LinearLayout android:orientation="vertical"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                        <TextView android:text="Harwick el Mercader" android:textColor="@color/texto"
-                            android:textSize="13sp" android:textStyle="bold"
+                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="👥" android:textSize="14sp"
+                            android:layout_marginEnd="6dp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="Aliado · Taberna del Oso, Aldea de Valemar"
-                            android:textColor="@color/texto_secundario" android:textSize="11sp"
+                        <TextView android:text="NPCs CONOCIDOS" android:textColor="@color/dorado"
+                            android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
-                </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/borde"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="6dp"/>
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingTop="6dp" android:paddingBottom="6dp"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="🔴" android:textSize="10sp" android:layout_marginEnd="8dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <LinearLayout android:orientation="vertical"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                        <TextView android:text="El Señor de las Sombras" android:textColor="@color/texto"
-                            android:textSize="13sp" android:textStyle="bold"
+                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                        android:paddingTop="6dp" android:paddingBottom="6dp"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="🟢" android:textSize="10sp" android:layout_marginEnd="8dp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="Antagonista · Paradero desconocido"
-                            android:textColor="@color/texto_secundario" android:textSize="11sp"
+                        <LinearLayout android:orientation="vertical"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                            <TextView android:text="Harwick el Mercader" android:textColor="@color/texto"
+                                android:textSize="13sp" android:textStyle="bold"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Aliado · Taberna del Oso, Aldea de Valemar"
+                                android:textColor="@color/texto_secundario" android:textSize="11sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/borde"/>
+
+                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                        android:paddingTop="6dp" android:paddingBottom="6dp"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="🔴" android:textSize="10sp" android:layout_marginEnd="8dp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <LinearLayout android:orientation="vertical"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                            <TextView android:text="El Señor de las Sombras" android:textColor="@color/texto"
+                                android:textSize="13sp" android:textStyle="bold"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Antagonista · Paradero desconocido"
+                                android:textColor="@color/texto_secundario" android:textSize="11sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|start" android:src="@drawable/esquina" android:rotation="0"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|end" android:src="@drawable/esquina" android:rotation="90"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|start" android:src="@drawable/esquina" android:rotation="270"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|end" android:src="@drawable/esquina" android:rotation="180"/>
+            </FrameLayout>
 
             <!-- Nota libre -->
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" android:padding="10dp"
-                android:background="@drawable/seccion_bg">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="✏️" android:textSize="14sp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <TextView android:text="NOTA RÁPIDA" android:textColor="@color/dorado"
-                        android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/seccion_bg"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="✏️" android:textSize="14sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:text="NOTA RÁPIDA" android:textColor="@color/dorado"
+                            android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/borde"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
+
+                    <EditText android:id="@+id/editNota"
+                        android:hint="Escribe aquí tus notas..."
+                        android:textColorHint="@color/texto_secundario"
+                        android:textColor="@color/texto"
+                        android:textSize="13sp"
+                        android:background="@drawable/stat_bg"
+                        android:padding="10dp"
+                        android:minLines="4"
+                        android:gravity="top"
+                        android:inputType="textMultiLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <Button android:id="@+id/btnGuardarNota"
+                        android:text="💾  GUARDAR NOTA"
+                        android:backgroundTint="@color/boton_bg" android:textColor="@color/dorado"
+                        android:textSize="12sp" android:layout_marginTop="8dp"
+                        android:layout_width="match_parent" android:layout_height="36dp"/>
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
-
-                <EditText android:id="@+id/editNota"
-                    android:hint="Escribe aquí tus notas..."
-                    android:textColorHint="@color/texto_secundario"
-                    android:textColor="@color/texto"
-                    android:textSize="13sp"
-                    android:background="@drawable/stat_bg"
-                    android:padding="10dp"
-                    android:minLines="4"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-                <Button android:id="@+id/btnGuardarNota"
-                    android:text="💾  GUARDAR NOTA"
-                    android:backgroundTint="@color/boton_bg" android:textColor="@color/dorado"
-                    android:textSize="12sp" android:layout_marginTop="8dp"
-                    android:layout_width="match_parent" android:layout_height="36dp"/>
-            </LinearLayout>
-
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|start" android:src="@drawable/esquina" android:rotation="0"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|end" android:src="@drawable/esquina" android:rotation="90"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|start" android:src="@drawable/esquina" android:rotation="270"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|end" android:src="@drawable/esquina" android:rotation="180"/>
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 

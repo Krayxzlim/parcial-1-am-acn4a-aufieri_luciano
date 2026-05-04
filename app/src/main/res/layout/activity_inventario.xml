@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/fondo"
+    android:background="@drawable/fondo"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -38,189 +38,257 @@
             android:padding="8dp">
 
             <!-- Capacidad de carga -->
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" android:padding="10dp"
-                android:background="@drawable/seccion_bg">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="🎒" android:textSize="14sp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <TextView android:text="CARGA" android:textColor="@color/dorado"
-                        android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                    <TextView android:text="12 / 120 lb" android:textColor="@color/dorado_claro"
-                        android:textSize="12sp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/seccion_bg"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="🎒" android:textSize="14sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:text="CARGA" android:textColor="@color/dorado"
+                            android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                        <TextView android:text="12 / 120 lb" android:textColor="@color/dorado_claro"
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/borde"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
+
+                    <!-- Barra de carga -->
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="match_parent" android:layout_height="8dp"
+                        android:background="@drawable/stat_bg">
+                        <View android:layout_width="0dp" android:layout_height="match_parent"
+                            android:layout_weight="10" android:background="@color/dorado"/>
+                        <View android:layout_width="0dp" android:layout_height="match_parent"
+                            android:layout_weight="90"/>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
-
-                <!-- Barra de carga -->
-                <LinearLayout android:orientation="horizontal"
-                    android:layout_width="match_parent" android:layout_height="8dp"
-                    android:background="@drawable/stat_bg">
-                    <View android:layout_width="0dp" android:layout_height="match_parent"
-                        android:layout_weight="10" android:background="@color/dorado"/>
-                    <View android:layout_width="0dp" android:layout_height="match_parent"
-                        android:layout_weight="90"/>
-                </LinearLayout>
-            </LinearLayout>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|start" android:src="@drawable/esquina" android:rotation="0"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|end" android:src="@drawable/esquina" android:rotation="90"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|start" android:src="@drawable/esquina" android:rotation="270"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|end" android:src="@drawable/esquina" android:rotation="180"/>
+            </FrameLayout>
 
             <!-- Monedas -->
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" android:padding="10dp"
-                android:background="@drawable/seccion_bg">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="💰" android:textSize="14sp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <TextView android:text="MONEDAS" android:textColor="@color/dorado"
-                        android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/seccion_bg"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="💰" android:textSize="14sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:text="MONEDAS" android:textColor="@color/dorado"
+                            android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/borde"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout android:orientation="horizontal"
+                        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+                        <LinearLayout android:orientation="vertical" android:gravity="center"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                            <TextView android:text="PP" android:textColor="@color/texto_secundario" android:textSize="9sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="0" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:gravity="center"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                            <TextView android:text="PO" android:textColor="@color/dorado_claro" android:textSize="9sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="45" android:textColor="@color/dorado" android:textSize="16sp" android:textStyle="bold"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:gravity="center"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                            <TextView android:text="PE" android:textColor="@color/texto_secundario" android:textSize="9sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="0" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:gravity="center"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                            <TextView android:text="PC" android:textColor="@color/texto_secundario" android:textSize="9sp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="12" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="6dp" android:layout_marginBottom="8dp"/>
-
-                <LinearLayout android:orientation="horizontal"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-
-                    <LinearLayout android:orientation="vertical" android:gravity="center"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                        <TextView android:text="PP" android:textColor="@color/texto_secundario" android:textSize="9sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="0" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:orientation="vertical" android:gravity="center"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                        <TextView android:text="PO" android:textColor="@color/dorado_claro" android:textSize="9sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="45" android:textColor="@color/dorado" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:orientation="vertical" android:gravity="center"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                        <TextView android:text="PE" android:textColor="@color/texto_secundario" android:textSize="9sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="0" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                    <LinearLayout android:orientation="vertical" android:gravity="center"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                        <TextView android:text="PC" android:textColor="@color/texto_secundario" android:textSize="9sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <TextView android:text="12" android:textColor="@color/texto" android:textSize="16sp" android:textStyle="bold"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|start" android:src="@drawable/esquina" android:rotation="0"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|end" android:src="@drawable/esquina" android:rotation="90"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|start" android:src="@drawable/esquina" android:rotation="270"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|end" android:src="@drawable/esquina" android:rotation="180"/>
+            </FrameLayout>
 
             <!-- Objetos -->
-            <LinearLayout android:orientation="vertical"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" android:padding="10dp"
-                android:background="@drawable/seccion_bg">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <TextView android:text="⚔" android:textSize="14sp" android:textColor="@color/dorado"
-                        android:layout_marginEnd="6dp"
-                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    <TextView android:text="OBJETOS" android:textColor="@color/dorado"
-                        android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
-                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                    <Button android:id="@+id/btnAgregarObjeto"
-                        android:text="＋" android:textColor="@color/dorado"
-                        android:backgroundTint="@color/boton_bg" android:textSize="14sp"
-                        android:layout_width="36dp" android:layout_height="30dp" android:padding="0dp"/>
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/seccion_bg"/>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginTop="6dp" android:layout_marginBottom="6dp"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <LinearLayout android:id="@+id/layoutObjetos" android:orientation="vertical"
-                    android:layout_width="match_parent" android:layout_height="wrap_content">
-
-                    <!-- Ejemplo 1 -->
                     <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                        android:paddingTop="8dp" android:paddingBottom="8dp"
                         android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:text="🗡️" android:textSize="20sp"
-                            android:layout_marginEnd="10dp"
+                        <TextView android:text="⚔" android:textSize="14sp" android:textColor="@color/dorado"
+                            android:layout_marginEnd="6dp"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <LinearLayout android:orientation="vertical"
-                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                            <TextView android:text="Espada Corta +1" android:textColor="@color/texto"
-                                android:textSize="13sp" android:textStyle="bold"
-                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                            <TextView android:text="Arma · 1 lb · Daño: 1d6+1 perforante"
-                                android:textColor="@color/texto_secundario" android:textSize="11sp"
-                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        </LinearLayout>
-                        <TextView android:text="Eq." android:textColor="@color/dorado"
-                            android:textSize="10sp" android:background="@drawable/stat_bg"
-                            android:padding="4dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        <TextView android:text="OBJETOS" android:textColor="@color/dorado"
+                            android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
+                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                        <Button android:id="@+id/btnAgregarObjeto"
+                            android:text="＋" android:textColor="@color/dorado"
+                            android:backgroundTint="@color/boton_bg" android:textSize="14sp"
+                            android:layout_width="36dp" android:layout_height="30dp" android:padding="0dp"/>
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:background="@color/borde"/>
+                        android:background="@color/borde"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="6dp"/>
 
-                    <!-- Ejemplo 2 -->
-                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                        android:paddingTop="8dp" android:paddingBottom="8dp"
+                    <LinearLayout android:id="@+id/layoutObjetos" android:orientation="vertical"
                         android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:text="🧪" android:textSize="20sp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <LinearLayout android:orientation="vertical"
-                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                            <TextView android:text="Poción de Curación" android:textColor="@color/texto"
-                                android:textSize="13sp" android:textStyle="bold"
+
+                        <!-- Ejemplo 1 -->
+                        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                            android:paddingTop="8dp" android:paddingBottom="8dp"
+                            android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <TextView android:text="🗡️" android:textSize="20sp"
+                                android:layout_marginEnd="10dp"
                                 android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                            <TextView android:text="Consumible · 0.5 lb · Cura 2d4+2 PG"
-                                android:textColor="@color/texto_secundario" android:textSize="11sp"
+                            <LinearLayout android:orientation="vertical"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <TextView android:text="Espada Corta +1" android:textColor="@color/texto"
+                                    android:textSize="13sp" android:textStyle="bold"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                <TextView android:text="Arma · 1 lb · Daño: 1d6+1 perforante"
+                                    android:textColor="@color/texto_secundario" android:textSize="11sp"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <TextView android:text="Eq." android:textColor="@color/dorado"
+                                android:textSize="10sp" android:background="@drawable/stat_bg"
+                                android:padding="4dp"
                                 android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </LinearLayout>
-                        <TextView android:text="x3" android:textColor="@color/dorado_claro"
-                            android:textSize="12sp" android:textStyle="bold"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                    </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:background="@color/borde"/>
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="@color/borde"/>
 
-                    <!-- Ejemplo 3 -->
-                    <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
-                        android:paddingTop="8dp" android:paddingBottom="8dp"
-                        android:layout_width="match_parent" android:layout_height="wrap_content">
-                        <TextView android:text="📜" android:textSize="20sp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                        <LinearLayout android:orientation="vertical"
-                            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                            <TextView android:text="Pergamino de Bola de Fuego" android:textColor="@color/texto"
-                                android:textSize="13sp" android:textStyle="bold"
+                        <!-- Ejemplo 2 -->
+                        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                            android:paddingTop="8dp" android:paddingBottom="8dp"
+                            android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <TextView android:text="🧪" android:textSize="20sp"
+                                android:layout_marginEnd="10dp"
                                 android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                            <TextView android:text="Pergamino mágico · Nivel 3"
-                                android:textColor="@color/texto_secundario" android:textSize="11sp"
+                            <LinearLayout android:orientation="vertical"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <TextView android:text="Poción de Curación" android:textColor="@color/texto"
+                                    android:textSize="13sp" android:textStyle="bold"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                <TextView android:text="Consumible · 0.5 lb · Cura 2d4+2 PG"
+                                    android:textColor="@color/texto_secundario" android:textSize="11sp"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            </LinearLayout>
+                            <TextView android:text="x3" android:textColor="@color/dorado_claro"
+                                android:textSize="12sp" android:textStyle="bold"
                                 android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp"
+                            android:background="@color/borde"/>
+
+                        <!-- Ejemplo 3 -->
+                        <LinearLayout android:orientation="horizontal" android:gravity="center_vertical"
+                            android:paddingTop="8dp" android:paddingBottom="8dp"
+                            android:layout_width="match_parent" android:layout_height="wrap_content">
+                            <TextView android:text="📜" android:textSize="20sp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <LinearLayout android:orientation="vertical"
+                                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                <TextView android:text="Pergamino de Bola de Fuego" android:textColor="@color/texto"
+                                    android:textSize="13sp" android:textStyle="bold"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                <TextView android:text="Pergamino mágico · Nivel 3"
+                                    android:textColor="@color/texto_secundario" android:textSize="11sp"
+                                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|start" android:src="@drawable/esquina" android:rotation="0"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="top|end" android:src="@drawable/esquina" android:rotation="90"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|start" android:src="@drawable/esquina" android:rotation="270"/>
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_gravity="bottom|end" android:src="@drawable/esquina" android:rotation="180"/>
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 
