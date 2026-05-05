@@ -3,15 +3,19 @@
 > Aplicación móvil Android para Dungeons & Dragons 5ª Edición  
 > Parcial 1 · Desarrollo de Aplicaciones Móviles · ACN4A
 
-## Informe de Pantallas
+---
+
+## 📋 Informe de Pantallas
 
 El informe describe las 3 pantallas de la aplicación, sus funcionalidades esperadas y el flujo de uso de cada una.
 
-**[→ Ver Informe Interactivo](https://krayxzlim.github.io/parcial-1-am-acn4a-aufieri_luciano/informe_dnd_companion.html)**
+**[→ Ver Informe Interactivo](https://rawcdn.githack.com/Krayxzlim/parcial-1-am-acn4a-aufieri_luciano/f221c9c7c4f72d5f843da67e2c0e0f9414639e0e/informe_dnd_companion.html)**
 
-> Si el link no abre, descargá el archivo [`informe_dnd_companion_final.html`](./informe_dnd_companion.html) y abrilo en tu navegador.
+> Si el link no abre, descargá el archivo [`informe_dnd_companion.html`](./informe_dnd_companion.html) haciendo clic derecho → *Guardar como* y abrilo en tu navegador.
 
-## Pantallas
+---
+
+## 📱 Pantallas
 
 | # | Pantalla | Activity | Descripción |
 |---|----------|----------|-------------|
@@ -19,7 +23,9 @@ El informe describe las 3 pantallas de la aplicación, sus funcionalidades esper
 | 2 | **Inventario** | `InventarioActivity` | Carga, monedas y objetos del personaje |
 | 3 | **Notas** | `NotasActivity` | Diario de campaña, NPCs y nota rápida |
 
-## Funcionalidades implementadas
+---
+
+## ✦ Funcionalidades implementadas
 
 ### Pantalla 1 — Inicio
 - Ficha del personaje con avatar seleccionable desde galería
@@ -42,7 +48,9 @@ El informe describe las 3 pantallas de la aplicación, sus funcionalidades esper
 - Registro de NPCs con indicador de relación por color (aliado / antagonista / neutral)
 - Nota rápida con `EditText` multilinea y confirmación via `Toast`
 
-## Estructura del proyecto
+---
+
+## 🗂 Estructura del proyecto
 
 ```
 app/src/main/
@@ -75,7 +83,9 @@ app/src/main/
 │       └── tomo_bg.xml
 ```
 
-## Tecnologías
+---
+
+## 🛠 Tecnologías
 
 | Elemento | Tecnología |
 |----------|-----------|
@@ -90,8 +100,16 @@ app/src/main/
 | Notificaciones | `Toast` |
 | Navegación | `startActivity` + `overridePendingTransition` |
 
+---
+
 ## 👤 Integrante
 
 | Apellido | Usuario GitHub |
 |----------|----------------|
 | Aufieri Luciano | [@Krayxzlim](https://github.com/Krayxzlim) |
+
+---
+
+<p align="center">
+  <sub>✦ &nbsp; D&D Companion · ACN4A · 2025 &nbsp; ✦</sub>
+</p>
