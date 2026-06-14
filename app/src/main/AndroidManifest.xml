@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permiso para descargar imágenes con Glide y conectar a Firebase -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,14 +14,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DndCompanion">
+
+        <!--
+            LoginActivity es el Launcher.
+            Maneja Firebase Auth y redirige a MainActivity si ya hay sesión.
+        -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- MainActivity recibe el email del usuario vía extras -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
 
         <activity
             android:name=".InventarioActivity"
@@ -27,6 +40,16 @@
         <activity
             android:name=".NotasActivity"
             android:exported="false"/>
+
+        <!--
+            DetalleHechizo recibe todos los datos del hechizo vía Intent extras.
+            Descarga la imagen desde URL usando Glide.
+        -->
+        <activity
+            android:name=".DetalleHechizo"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
+
     </application>
 
 </manifest>
