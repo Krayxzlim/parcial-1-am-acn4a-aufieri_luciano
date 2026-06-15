@@ -129,37 +129,37 @@ public class MainActivity extends AppCompatActivity {
                 "Descarga de Escarcha", "TRUCO", "Conjuración",
                 "Acción", "60 pies", "1 criatura", "Instantáneo", false, false,
                 "Lanzas un rayo de frío contra una criatura. Realiza un ataque de hechizo a distancia. Si impacta, inflige 1d8 de daño de frío y la velocidad del objetivo se reduce en 10 pies hasta el inicio de tu siguiente turno.\n\nEl daño aumenta en 1d8 cuando alcanzas nivel 5 (2d8), nivel 11 (3d8) y nivel 17 (4d8).",
-                "https://www.dndbeyond.com/attachments/2/720/frostbite.png"
+                "https://fecpedqshkgkbxxukbeg.supabase.co/storage/v1/object/public/Spells/frostbolt.png"
         ));
         agregarSpell(new SpellData(
                 "Mano Mágica", "TRUCO", "Conjuración",
                 "Acción", "30 pies", "Un objeto", "1 minuto", false, false,
                 "Una mano espectral flotante aparece en un punto elegido. Puede recoger o manipular objetos, abrir puertas, depositar objetos y usar herramientas sencillas.\n\nNo puede atacar, activar objetos mágicos ni cargar más de 10 libras.",
-                "https://www.dndbeyond.com/attachments/2/720/misty-step.png"
+                "https://fecpedqshkgkbxxukbeg.supabase.co/storage/v1/object/public/Spells/magehand.png"
         ));
         agregarSpell(new SpellData(
                 "Escudo", "NIVEL 1", "Abjuración",
                 "Reacción", "Personal", "Tú mismo", "1 ronda", false, false,
                 "Una barrera invisible de fuerza mágica aparece para protegerte. Se activa cuando eres atacado o cuando una criatura te lanza Proyectil Mágico.\n\n+5 a la CA hasta el inicio de tu siguiente turno. Eres inmune a Proyectil Mágico este turno.",
-                "https://www.dndbeyond.com/attachments/2/720/shield.png"
+                "https://fecpedqshkgkbxxukbeg.supabase.co/storage/v1/object/public/Spells/shield.png"
         ));
         agregarSpell(new SpellData(
                 "Misiles Mágicos", "NIVEL 1", "Evocación",
                 "Acción", "120 pies", "Una o más criaturas", "Instantáneo", false, false,
                 "Creas tres dardos brillantes de fuerza mágica que impactan automáticamente. Cada dardo inflige 1d4+1 de daño de fuerza.\n\nEn niveles superiores: el hechizo crea un dardo adicional por cada nivel por encima del 1.",
-                "https://www.dndbeyond.com/attachments/2/720/magic-missile.png"
+                "https://fecpedqshkgkbxxukbeg.supabase.co/storage/v1/object/public/Spells/magicmissil.png"
         ));
         agregarSpell(new SpellData(
                 "Armadura de Magia", "NIVEL 2", "Abjuración",
                 "Acción", "Toque", "Una criatura dispuesta", "8 horas", false, false,
                 "Tocas a una criatura dispuesta y la envuelves en protección mágica. Su CA se convierte en 13 + modificador de Destreza.\n\nEl hechizo finaliza si el objetivo equipa armadura.",
-                "https://www.dndbeyond.com/attachments/2/720/mage-armor.png"
+                "https://fecpedqshkgkbxxukbeg.supabase.co/storage/v1/object/public/Spells/magearmor.png"
         ));
         agregarSpell(new SpellData(
                 "Bola de Fuego", "NIVEL 3", "Evocación",
                 "Acción", "150 pies", "Esfera 20 pies", "Instantáneo", true, false,
                 "Un destello brillante explota en un punto elegido. Cada criatura en el área realiza salvación de Destreza CD 14.\n\nFalla: 8d6 daño de fuego.\nÉxito: mitad del daño.\n\nEn niveles superiores: +1d6 por cada nivel por encima del 3.",
-                "https://www.dndbeyond.com/attachments/2/720/fireball.png"
+                "https://fecpedqshkgkbxxukbeg.supabase.co/storage/v1/object/public/Spells/fireball.png"
         ));
 
         configurarBtnDado(R.id.btnD4,  4);

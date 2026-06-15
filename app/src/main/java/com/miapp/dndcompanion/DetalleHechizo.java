@@ -57,7 +57,7 @@ public class DetalleHechizo extends AppCompatActivity {
         //Layout raíz
         ScrollView scrollView = new ScrollView(this);
         scrollView.setBackgroundColor(color(R.color.fondo));
-        scrollView.setScrollbars(View.SCROLLBARS_INSIDE_OVERLAY);
+        scrollView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
