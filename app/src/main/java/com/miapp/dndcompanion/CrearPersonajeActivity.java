@@ -96,7 +96,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         root.setPadding(0, 0, 0, dp(40));
         scroll.addView(root);
 
-        //Header
+        // Header
         LinearLayout header = new LinearLayout(this);
         header.setOrientation(LinearLayout.VERTICAL);
         header.setGravity(Gravity.CENTER);
@@ -130,7 +130,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         header.addView(titulo);
 
         TextView sub = new TextView(this);
-        sub.setText("RAZAS VÍA OPEN5E API  ·  GUARDADO EN FIRESTORE");
+        sub.setText("RAZAS VÍA OPEN5E API  ·  PERSISTENCIA EN FIRESTORE");
         sub.setTextColor(color(R.color.texto_secundario));
         sub.setTextSize(8);
         sub.setLetterSpacing(0.08f);
@@ -159,7 +159,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         editNombre.setLayoutParams(nameLp);
         root.addView(editNombre);
 
-        //Raza (desde API)
+        //  Raza (desde API)
         root.addView(labelSeccion("✦  RAZA", "Cargando razas desde la API..."));
 
         spinnerRaza = new Spinner(this);
@@ -182,7 +182,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         txtRazaInfo.setLayoutParams(infoLp);
         root.addView(txtRazaInfo);
 
-        //Clase
+        // Clase
         root.addView(labelSeccion("✦  CLASE", null));
 
         spinnerClase = new Spinner(this);
@@ -197,7 +197,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         spinnerClase.setLayoutParams(claseLp);
         root.addView(spinnerClase);
 
-        //Alineación
+        // Alineación
         root.addView(labelSeccion("✦  ALINEACIÓN", null));
 
         spinnerAlineacion = new Spinner(this);
@@ -368,7 +368,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         return scroll;
     }
 
-    // Cargar razas desde Open5e
+    //Cargar razas desde Open5e
     private void cargarRazas() {
         executor.execute(() -> {
             try {
@@ -434,7 +434,7 @@ public class CrearPersonajeActivity extends AppCompatActivity {
         });
     }
 
-    // Guardar en Firestore y devolver resultado
+    //Guardar en Firestore con persistencia completa (XP, nivel, activo)
     private void guardarPersonaje() {
         String nombre = editNombre.getText().toString().trim();
         if (nombre.isEmpty()) {
@@ -447,50 +447,58 @@ public class CrearPersonajeActivity extends AppCompatActivity {
                 ? spinnerRaza.getSelectedItem().toString() : "Humano";
         String clase     = CLASES_SRD[spinnerClase.getSelectedItemPosition()];
         String alineacion= ALINEACIONES[spinnerAlineacion.getSelectedItemPosition()];
-        int nivel        = seekNivel.getProgress() + 1;
+        int nivelInicial = seekNivel.getProgress() + 1;
+        // XP inicial = umbral mínimo para el nivel elegido en el creador
+        long xpInicial = PersonajeModel.xpUmbralNivelActual(nivelInicial);
 
-        Map<String, Object> doc = new HashMap<>();
-        doc.put("nombre", nombre);     doc.put("raza", raza);
-        doc.put("clase", clase);       doc.put("nivel", nivel);
-        doc.put("alineacion", alineacion);
-        doc.put("fue", atributos[0]);  doc.put("des", atributos[1]);
-        doc.put("con", atributos[2]);  doc.put("int_", atributos[3]);
-        doc.put("sab", atributos[4]);  doc.put("car", atributos[5]);
-        doc.put("creadoEn", com.google.firebase.Timestamp.now());
-
-        // Intent resultado (siempre, con o sin sesión)
-        Intent result = new Intent();
-        result.putExtra("personaje_nombre",    nombre);
-        result.putExtra("personaje_raza",      raza);
-        result.putExtra("personaje_clase",     clase);
-        result.putExtra("personaje_nivel",     nivel);
-        result.putExtra("personaje_alineacion",alineacion);
-        result.putExtra("personaje_fue",  atributos[0]);
-        result.putExtra("personaje_des",  atributos[1]);
-        result.putExtra("personaje_con",  atributos[2]);
-        result.putExtra("personaje_int",  atributos[3]);
-        result.putExtra("personaje_sab",  atributos[4]);
-        result.putExtra("personaje_car",  atributos[5]);
-
-        if (mAuth.getCurrentUser() != null) {
-            String uid = mAuth.getCurrentUser().getUid();
-            db.collection("usuarios").document(uid)
-                    .collection("personajes").add(doc)
-                    .addOnSuccessListener(ref -> {
-                        Toast.makeText(this, "✦ ¡" + nombre + " creado!",
-                                Toast.LENGTH_LONG).show();
-                        setResult(RESULT_OK, result);
-                        finish();
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    })
-                    .addOnFailureListener(ex ->
-                            Toast.makeText(this, "Error: " + ex.getMessage(),
-                                    Toast.LENGTH_SHORT).show());
-        } else {
-            setResult(RESULT_OK, result);
-            finish();
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(this,
+                    "✦ Necesitás iniciar sesión para guardar tu personaje",
+                    Toast.LENGTH_LONG).show();
+            return;
         }
+
+        String uid = mAuth.getCurrentUser().getUid();
+
+        // Verificar si ya tiene personajes (para decidir si este es "activo")
+        db.collection("usuarios").document(uid).collection("personajes")
+                .get()
+                .addOnSuccessListener(query -> {
+                    boolean esElPrimero = query.isEmpty();
+
+                    Map<String, Object> doc = new HashMap<>();
+                    doc.put("nombre", nombre);
+                    doc.put("raza", raza);
+                    doc.put("clase", clase);
+                    doc.put("nivel", nivelInicial);
+                    doc.put("xp", xpInicial);
+                    doc.put("alineacion", alineacion);
+                    doc.put("fue", atributos[0]);
+                    doc.put("des", atributos[1]);
+                    doc.put("con", atributos[2]);
+                    doc.put("int_", atributos[3]);
+                    doc.put("sab", atributos[4]);
+                    doc.put("car", atributos[5]);
+                    doc.put("activo", esElPrimero); // el primer personaje creado es el activo
+                    doc.put("creadoEn", com.google.firebase.Timestamp.now());
+
+                    db.collection("usuarios").document(uid)
+                            .collection("personajes").add(doc)
+                            .addOnSuccessListener(ref -> {
+                                Toast.makeText(this, "✦ ¡" + nombre + " ha sido creado!",
+                                        Toast.LENGTH_LONG).show();
+                                setResult(RESULT_OK);
+                                finish();
+                                overridePendingTransition(
+                                        android.R.anim.fade_in, android.R.anim.fade_out);
+                            })
+                            .addOnFailureListener(ex ->
+                                    Toast.makeText(this, "Error: " + ex.getMessage(),
+                                            Toast.LENGTH_SHORT).show());
+                })
+                .addOnFailureListener(ex ->
+                        Toast.makeText(this, "Error: " + ex.getMessage(),
+                                Toast.LENGTH_SHORT).show());
     }
 
     private void refrescarAtributo(int idx) {
