@@ -25,6 +25,8 @@
   --n2-bg:      #2A1E3A; --n2-txt:    #A06DBF;
   --n3-bg:      #3A1E1E; --n3-txt:    #BF6D6D;
   --tomo-bg:    #1A1530;
+  --green:      #5DCAA5;
+  --purple:     #AFA9EC;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -129,7 +131,7 @@ body::after {
 .sec-desc {
   margin-top:10px; color:var(--text-sub);
   font-style:italic; font-size:15px;
-  max-width:540px; margin-left:auto; margin-right:auto;
+  max-width:560px; margin-left:auto; margin-right:auto;
 }
 .ornament {
   display:flex; align-items:center; gap:10px;
@@ -205,7 +207,6 @@ body::after {
   border-bottom:1px solid var(--gold);
   position:relative;
 }
-/* gold ornament lines */
 .app-header::before,.app-header::after {
   content:''; position:absolute; left:8px; right:8px; height:1px;
 }
@@ -220,7 +221,6 @@ body::after {
   overflow:hidden; position:relative;
   background:var(--bg-sec);
 }
-/* corner ornaments via pseudo — simplified */
 .a-sec::before,.a-sec::after {
   content:'';
   position:absolute; width:8px; height:8px;
@@ -251,6 +251,7 @@ body::after {
 /* Badge */
 .a-badge { background:var(--bg-stat); color:var(--gold); font-size:5.5px; padding:1px 4px; border-radius:2px; white-space:nowrap; letter-spacing:.04em; }
 .a-btn { background:var(--bg-stat); color:var(--gold); font-size:6px; padding:2px 5px; border-radius:2px; white-space:nowrap; border:1px solid var(--gold-dim); }
+.a-btn-sm { background:var(--bg-stat); color:var(--gold-light); font-size:5px; padding:2px 4px; border-radius:2px; white-space:nowrap; border:1px solid var(--gold-dim); }
 
 /* Character card */
 .char-grid { display:flex; gap:5px; }
@@ -260,10 +261,9 @@ body::after {
   border-radius:3px; overflow:hidden;
   background:var(--bg-stat);
   display:flex; align-items:center; justify-content:center;
-  color:var(--gold); font-size:16px;
+  color:var(--gold); font-size:14px;
   position:relative;
 }
-/* corner lines on avatar */
 .char-avatar::before,.char-avatar::after {
   content:''; position:absolute; width:5px; height:5px;
 }
@@ -271,6 +271,7 @@ body::after {
 .char-avatar::after  { bottom:0; right:0; border-bottom:1px solid var(--gold); border-right:1px solid var(--gold); }
 .char-info { flex:1; min-width:0; }
 .char-name { color:var(--text); font-size:8.5px; font-weight:700; }
+.char-name.placeholder { color:var(--text-sub); }
 .char-sub  { color:var(--text-sub); font-size:6px; line-height:1.5; }
 .char-stats { display:flex; gap:2px; margin-top:3px; }
 .stat-box {
@@ -282,8 +283,15 @@ body::after {
 .attr-row { display:flex; gap:1px; margin-top:4px; }
 .attr { flex:1; text-align:center; }
 .attr .al { color:var(--gold-light); font-size:5px; }
-.attr .av { color:var(--text); font-size:7px; font-weight:700; }
-.attr .am { color:var(--text-sub); font-size:5px; }
+.attr .av { color:var(--text); font-size:7.5px; font-weight:700; }
+.attr .am { color:var(--text-sub); font-size:5.5px; }
+
+/* XP bar */
+.xp-bar-wrap { margin-top:5px; }
+.xp-bar-labels { display:flex; justify-content:space-between; font-size:5px; color:var(--text-sub); margin-bottom:2px; }
+.xp-bar-labels .lvl { color:var(--gold-light); }
+.xp-bar-track { height:4px; background:#0D0D14; border-radius:2px; overflow:hidden; }
+.xp-bar-fill { height:100%; background:var(--gold); border-radius:2px; }
 
 /* Spells */
 .spell-row { display:flex; align-items:center; gap:3px; padding:2px 0; border-bottom:1px solid var(--border); }
@@ -306,6 +314,7 @@ body::after {
 .tomo-ico  { font-size:22px; }
 .tomo-dots { color:var(--gold); font-size:6px; margin-top:2px; }
 .tomo-lbl  { color:var(--gold-light); font-size:5.5px; margin-top:2px; line-height:1.4; }
+.tomo-link { color:var(--gold-dim); font-size:4.5px; margin-top:3px; }
 
 /* Dice */
 .dice-grid { display:flex; gap:2px; margin-top:2px; }
@@ -337,8 +346,14 @@ body::after {
 .mission-name { color:var(--text); font-size:7.5px; font-weight:700; display:block; }
 .mission-desc { color:var(--text-sub); font-size:6px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .mission-reward { color:var(--gold-light); font-size:6px; display:block; }
+.mission-active-wrap { padding:3px 0; border-bottom:1px solid var(--border); }
+.mission-active-wrap:last-child { border-bottom:none; }
+.mission-active-btns { display:flex; gap:3px; margin-top:3px; }
+.mab { flex:1; text-align:center; font-size:5px; padding:2px; border-radius:2px; border:1px solid var(--gold-dim); background:var(--bg-stat); }
+.mab.ok { color:var(--green); }
+.mab.no { color:#C05050; }
 
-/* Progress bar */
+/* Progress bar (carga) */
 .prog { height:5px; background:var(--border); border-radius:2px; margin-top:3px; overflow:hidden; }
 .prog-fill { height:100%; background:var(--gold); border-radius:2px; }
 
@@ -374,6 +389,62 @@ body::after {
   border-radius:3px; padding:5px; color:var(--text-sub);
   font-size:7px; min-height:22px; margin-top:2px;
 }
+
+/* Login form mock */
+.login-icon { font-size:30px; text-align:center; color:var(--gold); margin:10px 0 2px; }
+.login-title { text-align:center; font-family:'Cinzel',serif; font-size:11px; font-weight:700; color:var(--gold); }
+.login-sub { text-align:center; font-size:5.5px; color:var(--text-sub); letter-spacing:.1em; margin-top:2px; margin-bottom:8px; }
+.login-card { margin:4px; padding:8px; background:var(--bg-sec); border:1px solid var(--gold-dim); border-radius:4px; }
+.login-label { color:var(--gold-light); font-size:5.5px; letter-spacing:.05em; margin-bottom:2px; }
+.login-input { background:#0D0D14; border:1px solid var(--border); border-radius:2px; padding:4px; color:var(--text-sub); font-size:6px; margin-bottom:6px; }
+.login-btn-main { background:var(--bg-stat); border:1px solid var(--gold-dim); color:var(--gold); text-align:center; padding:5px; font-size:6.5px; border-radius:2px; margin-top:4px; }
+.login-btn-sec { text-align:center; color:var(--gold-light); font-size:6px; padding:4px; margin-top:3px; }
+
+/* Spinner mock (Crear Personaje) */
+.field-label { color:var(--gold); font-size:6.5px; font-weight:700; letter-spacing:.05em; margin:6px 4px 2px; }
+.field-sep { height:1px; background:var(--gold-dim); margin:0 4px 4px; }
+.field-input { background:var(--bg-stat); border:1px solid var(--border); border-radius:2px; padding:4px 6px; margin:0 4px; color:var(--text-sub); font-size:6.5px; }
+.field-spinner { background:var(--bg-stat); border:1px solid var(--border); border-radius:2px; padding:4px 6px; margin:3px 4px 0; color:var(--text); font-size:6.5px; display:flex; justify-content:space-between; }
+.race-info-box { background:var(--bg-stat); border:1px solid var(--border); border-radius:2px; padding:4px 6px; margin:3px 4px 0; color:var(--gold-light); font-size:5.5px; line-height:1.5; }
+.attr-edit-grid { display:flex; gap:2px; margin:6px 4px 0; }
+.attr-edit-col { flex:1; background:var(--bg-stat); border-radius:3px; padding:3px 1px; text-align:center; }
+.attr-edit-col .al { color:var(--gold-light); font-size:5px; }
+.attr-edit-col .av { color:var(--text); font-size:8px; font-weight:700; }
+.attr-edit-btns { display:flex; gap:1px; margin-top:2px; justify-content:center; }
+.attr-edit-btns span { background:#0D0D14; width:8px; height:8px; border-radius:1px; font-size:6px; display:flex; align-items:center; justify-content:center; color:var(--text-sub); }
+.create-btn { margin:8px 4px 4px; background:var(--bg-stat); border:1px solid var(--gold-dim); color:var(--gold); text-align:center; padding:6px; font-size:7px; font-weight:700; border-radius:3px; }
+
+/* Filtros (Grimorio) */
+.filter-search { background:var(--bg-stat); border:1px solid var(--border); border-radius:2px; padding:4px 6px; margin:4px; color:var(--text-sub); font-size:6px; }
+.filter-row { display:flex; gap:3px; margin:0 4px 4px; }
+.filter-chip { flex:1; background:var(--bg-stat); border:1px solid var(--border); border-radius:2px; padding:3px 4px; font-size:5.5px; color:var(--text-sub); text-align:center; }
+.spell-list-row { display:flex; align-items:center; gap:4px; padding:4px; border-bottom:1px solid var(--border); }
+.spell-list-row:last-child { border-bottom:none; }
+.spell-list-info { flex:1; min-width:0; }
+.spell-list-name { color:var(--text); font-size:7px; font-weight:700; }
+.spell-list-sub { color:var(--text-sub); font-size:5.5px; }
+.spell-counter { text-align:center; color:var(--text-sub); font-size:5.5px; padding:4px 0; }
+
+/* Detalle hechizo mock */
+.dh-header { text-align:center; padding:10px 6px 6px; background:var(--bg-sec); }
+.dh-back { color:var(--gold-light); font-size:5.5px; text-align:left; margin-bottom:4px; }
+.dh-badges { display:flex; justify-content:center; gap:3px; margin-bottom:4px; }
+.dh-name { font-family:'Cinzel',serif; color:var(--gold); font-size:11px; font-weight:700; }
+.dh-class { color:var(--text-sub); font-size:5px; margin-top:2px; }
+.dh-image { height:50px; background:linear-gradient(135deg, #2A1E3A, #1E1E2A); display:flex; align-items:center; justify-content:center; font-size:22px; }
+.dh-props { display:flex; background:var(--bg-stat); padding:5px 2px; }
+.dh-prop { flex:1; text-align:center; }
+.dh-prop .pl { color:var(--gold-light); font-size:4.5px; }
+.dh-prop .pv { color:var(--text); font-size:6px; font-weight:700; margin-top:1px; }
+.dh-desc { padding:6px; }
+.dh-desc-label { color:var(--gold); font-size:6px; font-weight:700; margin-bottom:3px; }
+.dh-desc-text { color:var(--text); font-size:5.5px; line-height:1.5; }
+
+/* Level up dialog mock */
+.levelup-dialog { background:var(--bg-sec); border:1px solid var(--gold-dim); border-radius:4px; padding:10px; text-align:center; margin:8px 4px; }
+.levelup-ico { font-size:20px; }
+.levelup-title { color:var(--gold); font-size:7px; font-weight:700; margin-top:3px; }
+.levelup-sub { color:var(--text); font-size:6px; margin-top:2px; }
 
 /* Nav */
 .app-nav {
@@ -443,6 +514,7 @@ body::after {
 .f-step.trg { border-color:var(--gold-dim); color:var(--gold); background:rgba(201,168,76,.07); }
 .f-step.ok  { border-color:#1D6E4E; color:#5DCAA5; background:rgba(29,158,117,.07); }
 .f-step.dlg { border-color:#534AB7; color:#AFA9EC; background:rgba(127,119,221,.07); }
+.f-step.api { border-color:#1D6E8C; color:#5DB8CA; background:rgba(29,142,158,.07); }
 .f-arr { color:var(--text-sub); font-size:13px; }
 
 /* Tags */
@@ -452,6 +524,8 @@ body::after {
 .t-ui    { background:rgba(55,138,221,.09);  color:#2B6CB0; border:1px solid rgba(55,138,221,.25); }
 .t-data  { background:rgba(29,158,117,.09);  color:#0F6E56; border:1px solid rgba(29,158,117,.25); }
 .t-dlg   { background:rgba(127,119,221,.09); color:#534AB7; border:1px solid rgba(127,119,221,.25); }
+.t-api   { background:rgba(29,142,158,.09);  color:#0F6E7E; border:1px solid rgba(29,142,158,.25); }
+.t-fb    { background:rgba(255,160,0,.09);   color:#B8730A; border:1px solid rgba(255,160,0,.25); }
 
 /* ═══════════════════════════════════════
    GLOBAL FLOW TABLE
@@ -490,6 +564,37 @@ body::after {
 .gf-note { font-size:12px; color:var(--text-sub); font-style:italic; }
 
 /* ═══════════════════════════════════════
+   XP TABLE
+═══════════════════════════════════════ */
+.xp-table-wrap {
+  background:var(--bg-sec); border:1px solid var(--border);
+  border-radius:4px; padding:28px; margin-bottom:56px;
+}
+.xp-table { width:100%; border-collapse:collapse; margin-top:16px; }
+.xp-table th, .xp-table td {
+  padding:8px 10px; text-align:center; font-size:13px;
+  border:1px solid var(--border);
+}
+.xp-table th {
+  font-family:'JetBrains Mono',monospace; font-size:10px;
+  color:var(--gold); background:var(--bg-stat); letter-spacing:.05em;
+}
+.xp-table td { color:var(--text-sub); }
+.xp-table td.lvl { color:var(--gold-light); font-weight:600; }
+
+/* Firestore tree mock */
+.fs-tree {
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  background:var(--bg-stat); border:1px solid var(--border);
+  border-radius:4px; padding:18px 20px; line-height:1.9;
+  color:var(--text-sub); overflow-x:auto;
+}
+.fs-tree .coll { color:var(--gold); }
+.fs-tree .field { color:var(--text); }
+.fs-tree .val { color:var(--green); }
+.fs-tree .comment { color:var(--text-sub); font-style:italic; }
+
+/* ═══════════════════════════════════════
    PALETTE
 ═══════════════════════════════════════ */
 .pal-grid {
@@ -523,6 +628,7 @@ body::after {
   .main-layout.rev .phone-col { order:0; }
   .phone-col { position:static; display:flex; justify-content:center; margin-bottom:32px; }
   .gf-grid { grid-template-columns:1fr; }
+  .xp-table { font-size:11px; }
 }
 </style>
 </head>
@@ -531,15 +637,21 @@ body::after {
 <!-- ════════════════ HERO ════════════════ -->
 <div class="hero wrap">
   <h1 class="hero-title">D&amp;D Companion</h1>
-  <p class="hero-sub">INFORME DE DESCRIPCIÓN DE PANTALLAS · PARCIAL 1</p>
+  <p class="hero-sub">INFORME DE DESCRIPCIÓN DE PANTALLAS · PARCIAL 2</p>
   <p class="hero-meta">Aplicación móvil Android nativa · Java · D&amp;D 5ª Edición<br>
+    Firebase Auth/Firestore · Open5e API · Glide<br>
     Repositorio: <a href="https://github.com/Krayxzlim/parcial-1-am-acn4a-aufieri_luciano" style="color:var(--gold-light)">parcial-1-am-acn4a-aufieri_luciano</a></p>
   <div class="hero-rule"></div>
   <nav class="nav-pills">
     <a class="nav-pill" href="#intro">Visión General</a>
-    <a class="nav-pill" href="#p1">Pantalla Inicio</a>
-    <a class="nav-pill" href="#p2">Inventario</a>
-    <a class="nav-pill" href="#p3">Notas</a>
+    <a class="nav-pill" href="#p0">Login</a>
+    <a class="nav-pill" href="#p1">Inicio</a>
+    <a class="nav-pill" href="#p2">Crear Personaje</a>
+    <a class="nav-pill" href="#p3">Grimorio</a>
+    <a class="nav-pill" href="#p4">Detalle Hechizo</a>
+    <a class="nav-pill" href="#p5">Inventario</a>
+    <a class="nav-pill" href="#p6">Notas</a>
+    <a class="nav-pill" href="#xp">Sistema XP</a>
     <a class="nav-pill" href="#flujo">Flujo Global</a>
   </nav>
 </div>
@@ -549,15 +661,15 @@ body::after {
   <div class="sec-header reveal">
     <span class="sec-num">00 — VISIÓN GENERAL</span>
     <h2 class="sec-title">La Aplicación</h2>
-    <p class="sec-desc">Companion para sesiones de Dungeons &amp; Dragons 5e. Gestión de personaje, misiones, hechizos, inventario y notas desde un único lugar.</p>
+    <p class="sec-desc">Companion para sesiones de Dungeons &amp; Dragons 5e. Cuentas de usuario, personajes persistentes con progreso de experiencia, misiones, grimorio completo desde una API externa, inventario y notas, todo desde un único lugar.</p>
     <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
   </div>
 
   <div class="intro-grid reveal">
     <div class="icard"><div class="icard-ico">🎨</div><div class="icard-title">Identidad Visual</div><p class="icard-text">Fondo oscuro #0D0D14, acento dorado #C9A84C, tipografía Cinzel y serif. Esquinas ornamentales en cada tarjeta. Textura de grano sobre toda la app.</p></div>
-    <div class="icard"><div class="icard-ico">⚙️</div><div class="icard-title">Tecnología</div><p class="icard-text">Android nativo Java. ConstraintLayout + LinearLayout dinámico. ViewPropertyAnimator para misiones. ObjectAnimator para dados.</p></div>
-    <div class="icard"><div class="icard-ico">🧭</div><div class="icard-title">Navegación</div><p class="icard-text">Barra inferior fija con 4 ítems: Inicio, Inventario, Notas, Ajustes. Ítem activo en dorado. Transición fade_in/fade_out entre Activities.</p></div>
-    <div class="icard"><div class="icard-ico">📐</div><div class="icard-title">Estructura</div><p class="icard-text">3 Activities principales (MainActivity, InventarioActivity, NotasActivity). Strings, colors y dimens en resources. Conventional commits en Git.</p></div>
+    <div class="icard"><div class="icard-ico">🔥</div><div class="icard-title">Backend</div><p class="icard-text">Firebase Authentication para cuentas de usuario. Firestore para persistencia de personajes y misiones, organizados por usuario.</p></div>
+    <div class="icard"><div class="icard-ico">🌐</div><div class="icard-title">API externa</div><p class="icard-text">Open5e API (api.open5e.com) para hechizos y razas del SRD de D&amp;D 5e, consumida con HttpURLConnection + org.json en hilos de fondo.</p></div>
+    <div class="icard"><div class="icard-ico">📐</div><div class="icard-title">Estructura</div><p class="icard-text">7 Activities. Modelos de datos (SpellModel, PersonajeModel, MisionModel) separados de la lógica de UI. Conventional commits en Git.</p></div>
   </div>
 
   <div class="sec-header reveal" style="padding-top:0;padding-bottom:16px">
@@ -576,12 +688,80 @@ body::after {
   </div>
 </div>
 
-<!-- ════════════════ PANTALLA 1 ════════════════ -->
+<!-- ════════════════ PANTALLA 0 — LOGIN ════════════════ -->
+<div id="p0" class="wrap screen-block">
+  <div class="sec-header reveal">
+    <span class="sec-num">00 — AUTENTICACIÓN</span>
+    <h2 class="sec-title">Login</h2>
+    <p class="sec-desc">Punto de entrada de la app. Inicio de sesión y registro con Firebase Authentication.</p>
+    <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
+  </div>
+
+  <div class="main-layout reveal">
+    <div class="phone-col">
+      <div class="phone">
+        <div class="app">
+          <div class="login-icon">⚔</div>
+          <div class="login-title">D&amp;D Companion</div>
+          <div class="login-sub">TU AVENTURA, SIEMPRE CONTIGO</div>
+          <div class="login-card">
+            <div class="login-label">✦ CORREO ELECTRÓNICO</div>
+            <div class="login-input">aventurero@example.com</div>
+            <div class="login-label">✦ CONTRASEÑA</div>
+            <div class="login-input">••••••••</div>
+            <div class="login-btn-main">⚔ INGRESAR AL REINO</div>
+            <div class="login-btn-sec">✦ CREAR NUEVA CUENTA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-col">
+      <div class="screen-label">
+        <span class="screen-tag">PANTALLA 00</span>
+        <span class="screen-name">LoginActivity</span>
+      </div>
+      <p class="screen-intro">Punto de entrada (LAUNCHER) de la aplicación. Construida completamente por código Java, sin layout XML. Verifica si ya existe una sesión activa antes de mostrar el formulario.</p>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">🔥</div><span class="feat-name">Firebase Authentication</span><span class="feat-kind">BACKEND</span></div>
+          <div class="feat-body">
+            <p>Inicio de sesión con <code>signInWithEmailAndPassword()</code> y registro con <code>createUserWithEmailAndPassword()</code>. Validación de campos vacíos y longitud mínima de contraseña (6 caracteres) antes de llamar a Firebase.</p>
+            <div class="tags"><span class="tag t-fb">FirebaseAuth</span><span class="tag t-ui">Validación de formulario</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">↪️</div><span class="feat-name">Sesión persistente</span><span class="feat-kind">AUTOMÁTICA</span></div>
+          <div class="feat-body">
+            <p>Si <code>mAuth.getCurrentUser()</code> no es nulo al abrir la app, se navega directo a <code>MainActivity</code> sin mostrar el formulario, evitando pedir login en cada apertura.</p>
+            <div class="tags"><span class="tag t-fb">getCurrentUser()</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">📨</div><span class="feat-name">Pasaje de datos</span><span class="feat-kind">INTENT EXTRAS</span></div>
+          <div class="feat-body">
+            <p>Al loguearse correctamente, el email del usuario se envía a <code>MainActivity</code> mediante <code>Intent.putExtra()</code>, que lo usa para mostrar la sesión activa en Ajustes y para asociar personajes y misiones al UID correspondiente.</p>
+            <div style="margin-top:10px">
+              <div class="flow-title">FLUJO</div>
+              <div class="flow-row"><span class="f-step trg">Login exitoso</span><span class="f-arr">→</span><span class="f-step">putExtra(EXTRA_USER_EMAIL)</span><span class="f-arr">→</span><span class="f-step ok">MainActivity</span></div>
+            </div>
+            <div class="tags"><span class="tag t-data">Intent extras</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PANTALLA 1 — INICIO ════════════════ -->
 <div id="p1" class="wrap screen-block">
   <div class="sec-header reveal">
     <span class="sec-num">01 — PANTALLA PRINCIPAL</span>
     <h2 class="sec-title">Inicio</h2>
-    <p class="sec-desc">Centro de mando: personaje, misiones activas, misiones disponibles, hechizos y tirada de dados en un único scroll.</p>
+    <p class="sec-desc">Centro de mando: personaje activo con XP/nivel, misiones activas y disponibles, hechizos y tirada de dados en un único scroll.</p>
     <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
   </div>
 
@@ -597,16 +777,16 @@ body::after {
           <!-- Personaje -->
           <div class="a-sec">
             <div class="a-sec-inner">
-              <div class="a-sec-title">TU PERSONAJE <span style="color:var(--gold);font-size:9px">›</span></div>
+              <div class="a-sec-title">TU PERSONAJE <span class="a-btn-sm">⇄ CAMBIAR</span></div>
               <div class="a-sep"></div>
               <div class="char-grid">
                 <div class="char-avatar">⚔</div>
                 <div class="char-info">
                   <div class="char-name">Arannis</div>
-                  <div class="char-sub">Elfo de los Bosques<br>Mago Nivel 5<br>Caótico Neutral</div>
+                  <div class="char-sub">Elfo<br>Mago · Caótico Neutral</div>
                   <div class="char-stats">
-                    <div class="stat-box"><span class="sl">CA</span><span class="sv">13</span></div>
-                    <div class="stat-box"><span class="sl">PG</span><span class="sv">31/31</span></div>
+                    <div class="stat-box"><span class="sl">CA</span><span class="sv">12</span></div>
+                    <div class="stat-box"><span class="sl">PG</span><span class="sv">42</span></div>
                     <div class="stat-box"><span class="sl">INIC.</span><span class="sv">+2</span></div>
                   </div>
                 </div>
@@ -619,20 +799,31 @@ body::after {
                 <div class="attr"><div class="al">SAB</div><div class="av">12</div><div class="am">(+1)</div></div>
                 <div class="attr"><div class="al">CAR</div><div class="av">10</div><div class="am">(+0)</div></div>
               </div>
+              <div class="xp-bar-wrap">
+                <div class="xp-bar-labels"><span class="lvl">Nivel 5</span><span>6.500 / 14.000 XP</span></div>
+                <div class="xp-bar-track"><div class="xp-bar-fill" style="width:46%"></div></div>
+              </div>
             </div>
           </div>
           <!-- Misiones activas -->
           <div class="a-sec">
             <div class="a-sec-inner">
-              <div class="a-sec-title"><span>✦ MISIONES ACTIVAS</span><span style="color:var(--gold);font-size:9px">›</span></div>
+              <div class="a-sec-title"><span>✦ MISIONES ACTIVAS</span></div>
               <div class="a-sep"></div>
-              <span class="ver-link">VER TODAS LAS MISIONES ›</span>
+              <div class="mission-active-wrap">
+                <span class="mission-name">Caza de bandidos</span>
+                <span class="mission-reward">Recompensa: 200 XP</span>
+                <div class="mission-active-btns">
+                  <div class="mab ok">✓ COMPLETAR</div>
+                  <div class="mab no">✕ CANCELAR</div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- Misiones disponibles -->
           <div class="a-sec">
             <div class="a-sec-inner">
-              <div class="a-sec-title"><span>✦ MISIONES DISPONIBLES</span><span style="color:var(--gold);font-size:9px">›</span></div>
+              <div class="a-sec-title"><span>✦ MISIONES DISPONIBLES</span></div>
               <div class="a-sep"></div>
               <div class="mission-row">
                 <div class="mission-ico">📜</div>
@@ -640,15 +831,6 @@ body::after {
                   <span class="mission-name">Entrega especial</span>
                   <span class="mission-desc">Entrega un paquete sellado al Gremio...</span>
                   <span class="mission-reward">Recompensa: 100 XP</span>
-                </div>
-                <div class="a-btn">ACEPTAR</div>
-              </div>
-              <div class="mission-row">
-                <div class="mission-ico">📜</div>
-                <div class="mission-info">
-                  <span class="mission-name">Caza de bandidos</span>
-                  <span class="mission-desc">Elimina a los bandidos del norte.</span>
-                  <span class="mission-reward">Recompensa: 200 XP</span>
                 </div>
                 <div class="a-btn">ACEPTAR</div>
               </div>
@@ -660,7 +842,7 @@ body::after {
           <!-- Hechizos -->
           <div class="a-sec">
             <div class="a-sec-inner">
-              <div class="a-sec-title"><span>✦ HECHIZOS CONOCIDOS</span><span style="color:var(--gold);font-size:9px">›</span></div>
+              <div class="a-sec-title"><span>✦ HECHIZOS CONOCIDOS</span></div>
               <div class="a-sep"></div>
               <div style="display:flex;gap:4px">
                 <div style="flex:1">
@@ -675,15 +857,15 @@ body::after {
                   <div class="tomo-ico">📖</div>
                   <div class="tomo-dots">✦ ✦ ✦</div>
                   <div class="tomo-lbl">Tomo<br>Arcano</div>
+                  <div class="tomo-link">VER TODOS ›</div>
                 </div>
               </div>
-              <span class="ver-link" style="text-align:right;display:block;padding-top:3px">VER TODOS (12) ›</span>
             </div>
           </div>
           <!-- Dados -->
           <div class="a-sec">
             <div class="a-sec-inner">
-              <div class="a-sec-title"><span>✦ TIRADA DE DADOS</span><span style="color:var(--gold);font-size:9px">›</span></div>
+              <div class="a-sec-title"><span>✦ TIRADA DE DADOS</span></div>
               <div class="a-sep"></div>
               <div style="display:flex;gap:4px">
                 <div style="flex:1">
@@ -724,64 +906,52 @@ body::after {
         <span class="screen-tag">PANTALLA 01</span>
         <span class="screen-name">MainActivity</span>
       </div>
-      <p class="screen-intro">Pantalla principal de la app. Vista scrolleable con 5 secciones que concentran toda la información activa del personaje. Es la única pantalla generada mayoritariamente por código Java en tiempo de ejecución.</p>
+      <p class="screen-intro">Pantalla principal de la app. Vista scrolleable con 5 secciones que concentran toda la información del personaje activo y sus misiones. Generada mayoritariamente por código Java en tiempo de ejecución, con datos cargados desde Firestore.</p>
 
       <div class="features">
         <div class="feat">
-          <div class="feat-head"><div class="feat-ico">⚔</div><span class="feat-name">Tu Personaje</span><span class="feat-kind">ESTÁTICA</span></div>
+          <div class="feat-head"><div class="feat-ico">⚔</div><span class="feat-name">Personaje activo</span><span class="feat-kind">PERSISTENTE</span></div>
           <div class="feat-body">
-            <p>Muestra avatar seleccionable desde galería (ActivityResultLauncher + GetContent), nombre, raza, clase/nivel y alineación. Tres fichas de estadística con drawables personalizados (shield_bg, heart_bg, light_bg). Seis atributos con modificador calculado en columnas de igual peso.</p>
-            <div class="tags"><span class="tag t-ui">FrameLayout con esquinas</span><span class="tag t-ui">ImageView clickeable</span><span class="tag t-ui">Drawables vectoriales</span></div>
+            <p>Muestra avatar seleccionable desde galería, nombre, raza, clase/nivel y alineación del personaje marcado como <code>activo</code> en Firestore. Si el usuario no tiene personajes, se muestra un estado placeholder ("Nombre", "Especie", "Clase", "Alineamiento") en color grisado.</p>
+            <p>El botón <strong>"⇄ CAMBIAR"</strong> aparece solo cuando el usuario tiene 2 o más personajes guardados, y abre un selector con todos ellos. El botón <strong>"✦ NUEVO"</strong> siempre permite crear un personaje adicional.</p>
+            <div class="tags"><span class="tag t-fb">Firestore query</span><span class="tag t-ui">Estado placeholder</span><span class="tag t-dlg">Selector de personajes</span></div>
           </div>
         </div>
 
         <div class="feat">
-          <div class="feat-head"><div class="feat-ico">⚔</div><span class="feat-name">Misiones Activas</span><span class="feat-kind">DINÁMICA</span></div>
+          <div class="feat-head"><div class="feat-ico">📊</div><span class="feat-name">Estadísticas D&amp;D 5e</span><span class="feat-kind">CALCULADAS</span></div>
           <div class="feat-body">
-            <p>Lista vacía al inicio, generada por código (<code>layoutActivas</code>). Las misiones se agregan al aceptarlas desde la sección de disponibles, con animación de entrada (alpha 0→1 + translationX -200→0, 250ms).</p>
-            <div style="margin-top:10px">
-              <div class="flow-title">FLUJO</div>
-              <div class="flow-row"><span class="f-step trg">Misión aceptada</span><span class="f-arr">→</span><span class="f-step">Animación entrada 250ms</span><span class="f-arr">→</span><span class="f-step ok">Badge "EN CURSO"</span></div>
-            </div>
-            <div class="tags"><span class="tag t-anim">ViewPropertyAnimator</span><span class="tag t-data">addView en layoutActivas</span></div>
+            <p>Seis atributos con modificador <code>(valor−10)/2</code> redondeado hacia abajo. La <strong>Iniciativa</strong> se calcula como el modificador de Destreza, según las reglas oficiales. CA y PG son estimaciones derivadas de Destreza/Constitución y nivel.</p>
+            <p>Barra de progreso de XP que muestra el nivel actual y el XP necesario para alcanzar el siguiente, usando la tabla oficial de experiencia de D&amp;D 5e.</p>
+            <div class="tags"><span class="tag t-data">PersonajeModel.modificador()</span><span class="tag t-data">getIniciativa()</span></div>
           </div>
         </div>
 
         <div class="feat">
-          <div class="feat-head"><div class="feat-ico">📜</div><span class="feat-name">Misiones Disponibles</span><span class="feat-kind">INTERACTIVA</span></div>
+          <div class="feat-head"><div class="feat-ico">📜</div><span class="feat-name">Misiones — disponibles y activas</span><span class="feat-kind">PERSISTENTE</span></div>
           <div class="feat-body">
-            <p>Cada misión vive dentro de un <strong>wrapper LinearLayout</strong> que agrupa el separador y el ítem. Al presionar ACEPTAR: el botón se deshabilita inmediatamente (anti doble tap), se anima la salida (alpha→0 + translationX +200, 250ms), luego en <code>wrapper.post()</code> se hace <code>removeView</code> — evitando el crash del renderer — y se elimina el separador del nuevo primer elemento si corresponde.</p>
+            <p>Cada misión vive en Firestore con un estado: <code>disponible → activa → completada/cancelada</code>. Al aceptar una misión disponible, se anima la transición (alpha + translationX, 250ms) y pasa a la lista de activas con dos botones: <strong>✓ COMPLETAR</strong> y <strong>✕ CANCELAR</strong>.</p>
             <div style="margin-top:10px">
-              <div class="flow-title">FLUJO ACEPTAR MISIÓN</div>
-              <div class="flow-row"><span class="f-step trg">Tap ACEPTAR</span><span class="f-arr">→</span><span class="f-step">btn.setEnabled(false)</span><span class="f-arr">→</span><span class="f-step">Salida 250ms</span><span class="f-arr">→</span><span class="f-step">wrapper.post removeView</span><span class="f-arr">→</span><span class="f-step ok">Aparece en Activas</span></div>
-              <div class="flow-row" style="margin-top:6px"><span class="f-step trg">Tap + NUEVA MISIÓN</span><span class="f-arr">→</span><span class="f-step ok">Nuevo wrapper agregado al final</span></div>
+              <div class="flow-title">FLUJO COMPLETAR MISIÓN</div>
+              <div class="flow-row"><span class="f-step trg">Tap COMPLETAR</span><span class="f-arr">→</span><span class="f-step">estado → "completada"</span><span class="f-arr">→</span><span class="f-step ok">XP otorgada al personaje activo</span><span class="f-arr">→</span><span class="f-step dlg">¿Subió de nivel?</span></div>
             </div>
-            <div class="tags"><span class="tag t-anim">alpha + translationX</span><span class="tag t-data">wrapper pattern</span><span class="tag t-ui">setEnabled anti doble tap</span></div>
+            <div class="tags"><span class="tag t-fb">Firestore update</span><span class="tag t-anim">ViewPropertyAnimator</span><span class="tag t-data">Máquina de estados</span></div>
           </div>
         </div>
 
         <div class="feat">
-          <div class="feat-head"><div class="feat-ico">✨</div><span class="feat-name">Hechizos Conocidos</span><span class="feat-kind">DIÁLOGO</span></div>
+          <div class="feat-head"><div class="feat-ico">✨</div><span class="feat-name">Hechizos conocidos + Tomo Arcano</span><span class="feat-kind">NAVEGACIÓN</span></div>
           <div class="feat-body">
-            <p>Lista de hechizos generada por <code>agregarSpell()</code>. Badges de nivel con colores diferenciados (TRUCO verde, NIVEL 1 azul, NIVEL 2 violeta, NIVEL 3 rojo). Al tocar se abre un AlertDialog personalizado (spellcard) con tiempo de conjuración, alcance, objetivo, duración, concentración, ritual y descripción scrolleable de 220dp.</p>
-            <div style="margin-top:10px">
-              <div class="flow-title">FLUJO</div>
-              <div class="flow-row"><span class="f-step trg">Tap en hechizo</span><span class="f-arr">→</span><span class="f-step dlg">AlertDialog spellcard</span><span class="f-arr">→</span><span class="f-step">Scroll descripción</span><span class="f-arr">→</span><span class="f-step ok">Cerrar tarjeta</span></div>
-            </div>
-            <div class="tags"><span class="tag t-dlg">AlertDialog custom</span><span class="tag t-ui">Badges color por nivel</span><span class="tag t-ui">ScrollView 220dp</span></div>
+            <p>Seis hechizos fijos con imagen personalizada (Supabase). El <strong>Tomo Arcano</strong> es el único punto de acceso al grimorio completo: abre <code>SpellListActivity</code>, que trae cientos de hechizos desde la Open5e API.</p>
+            <div class="tags"><span class="tag t-ui">Punto de entrada único</span></div>
           </div>
         </div>
 
         <div class="feat">
           <div class="feat-head"><div class="feat-ico">🎲</div><span class="feat-name">Tirada de Dados</span><span class="feat-kind">ANIMACIÓN</span></div>
           <div class="feat-body">
-            <p>6 botones (d4→d20) + aleatorio. Al tirar: rotación 360° (700ms) + flashes de números aleatorios cada 80ms. Al revelar el resultado: escala con OvershootInterpolator(2.5). D20 natural pulsa en dorado (alpha 1→0.3→1 × 3 reps). Pifia muestra calavera 💀 en rojo. Botón HISTORIAL abre AlertDialog con últimas 15 tiradas en lista alternada.</p>
-            <div style="margin-top:10px">
-              <div class="flow-title">FLUJO TIRADA</div>
-              <div class="flow-row"><span class="f-step trg">Tap dado</span><span class="f-arr">→</span><span class="f-step">Rotación + flashes (700ms)</span><span class="f-arr">→</span><span class="f-step ok">Resultado + Overshoot (400ms)</span></div>
-              <div class="flow-row" style="margin-top:6px"><span class="f-step trg">Tap HISTORIAL</span><span class="f-arr">→</span><span class="f-step dlg">Diálogo últimas 15 tiradas</span></div>
-            </div>
-            <div class="tags"><span class="tag t-anim">ObjectAnimator rotación</span><span class="tag t-anim">OvershootInterpolator 2.5</span><span class="tag t-dlg">Historial dialog</span></div>
+            <p>6 botones (d4→d20) + aleatorio. Al tirar: rotación 360° (700ms) + flashes de números aleatorios cada 80ms. D20 natural pulsa en dorado. Pifia muestra calavera 💀 en rojo. Historial de las últimas 15 tiradas en diálogo.</p>
+            <div class="tags"><span class="tag t-anim">ObjectAnimator rotación</span><span class="tag t-anim">OvershootInterpolator 2.5</span></div>
           </div>
         </div>
       </div>
@@ -789,64 +959,268 @@ body::after {
   </div>
 </div>
 
-<!-- ════════════════ PANTALLA 2 ════════════════ -->
+<!-- ════════════════ PANTALLA 2 — CREAR PERSONAJE ════════════════ -->
 <div id="p2" class="wrap screen-block">
   <div class="sec-header reveal">
-    <span class="sec-num">02 — GESTIÓN DE RECURSOS</span>
-    <h2 class="sec-title">Inventario</h2>
-    <p class="sec-desc">Gestión de carga, monedas y objetos del personaje. Accesible desde la barra de navegación inferior.</p>
+    <span class="sec-num">02 — CREACIÓN DE PERSONAJE</span>
+    <h2 class="sec-title">Crear Personaje</h2>
+    <p class="sec-desc">Formulario de creación con razas obtenidas en vivo desde la Open5e API, guardado persistente en Firestore.</p>
     <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
   </div>
 
   <div class="main-layout rev reveal">
-    <!-- INFO -->
     <div class="info-col">
       <div class="screen-label">
         <span class="screen-tag">PANTALLA 02</span>
-        <span class="screen-name">InventarioActivity</span>
+        <span class="screen-name">CrearPersonajeActivity</span>
       </div>
-      <p class="screen-intro">Pantalla de gestión de recursos materiales. Organizada en tres secciones: carga actual del personaje, monedas en circulación y lista de objetos equipados/en mochila.</p>
+      <p class="screen-intro">Se abre al tocar el encabezado "TU PERSONAJE" o el botón "✦ NUEVO" en Inicio. Construida 100% por código Java. Las razas se cargan de forma asíncrona apenas se abre la pantalla.</p>
 
       <div class="features">
         <div class="feat">
-          <div class="feat-head"><div class="feat-ico">🎒</div><span class="feat-name">Capacidad de Carga</span><span class="feat-kind">VISUAL</span></div>
+          <div class="feat-head"><div class="feat-ico">🌐</div><span class="feat-name">Razas desde Open5e API</span><span class="feat-kind">API EXTERNA</span></div>
           <div class="feat-body">
-            <p>Muestra el peso actual vs. el máximo soportado. Una barra de progreso horizontal (<code>LinearLayout</code> con dos <code>View</code> de peso proporcional) indica visualmente el porcentaje consumido, coloreada en dorado. Basado en el sistema D&amp;D: Fuerza × 15 libras de capacidad máxima.</p>
-            <div class="tags"><span class="tag t-ui">Barra proporción LinearLayout</span><span class="tag t-ui">Peso en libras</span></div>
-          </div>
-        </div>
-
-        <div class="feat">
-          <div class="feat-head"><div class="feat-ico">💰</div><span class="feat-name">Monedas</span><span class="feat-kind">ESTÁTICA</span></div>
-          <div class="feat-body">
-            <p>Cuatro tipos de moneda D&amp;D 5e en columnas iguales (<code>layout_weight="1"</code>): Piezas de Platino (PP), Oro (PO), Electrum (PE) y Cobre (PC). Las PO se destacan en dorado como moneda principal de la economía del juego.</p>
-            <div class="tags"><span class="tag t-ui">4 columnas weight="1"</span><span class="tag t-ui">Color diferenciado por tipo</span></div>
-          </div>
-        </div>
-
-        <div class="feat">
-          <div class="feat-head"><div class="feat-ico">⚔</div><span class="feat-name">Lista de Objetos</span><span class="feat-kind">INTERACTIVA</span></div>
-          <div class="feat-body">
-            <p>Lista de objetos (<code>layoutObjetos</code>) con ícono emoji representativo, nombre, tipo, peso y propiedades. Los objetos equipados muestran badge "Eq." en dorado. Los consumibles muestran cantidad "×N". El botón ＋ en el encabezado agrega nuevos objetos dinámicamente.</p>
+            <p>El spinner de raza se puebla con <code>GET /v1/races/</code>, filtrado al documento <code>wotc-srd</code>. Al elegir una raza se muestra su información: bonificadores de atributo, tamaño, velocidad e idiomas, extraída directamente de la respuesta JSON.</p>
+            <p>Si la API no responde, hay un fallback local con 9 razas clásicas para que el formulario nunca quede bloqueado.</p>
             <div style="margin-top:10px">
-              <div class="flow-title">FLUJO AGREGAR OBJETO</div>
-              <div class="flow-row"><span class="f-step trg">Tap en ＋</span><span class="f-arr">→</span><span class="f-step dlg">Formulario nuevo objeto</span><span class="f-arr">→</span><span class="f-step ok">Agregado a layoutObjetos</span></div>
+              <div class="flow-title">FLUJO DE CARGA</div>
+              <div class="flow-row"><span class="f-step trg">onCreate()</span><span class="f-arr">→</span><span class="f-step api">ExecutorService: GET /v1/races/</span><span class="f-arr">→</span><span class="f-step">Parse JSON con org.json</span><span class="f-arr">→</span><span class="f-step ok">Spinner poblado en el hilo principal</span></div>
             </div>
-            <div class="tags"><span class="tag t-data">layoutObjetos dinámico</span><span class="tag t-ui">Badge equipado / cantidad</span><span class="tag t-ui">Íconos emoji por tipo</span></div>
+            <div class="tags"><span class="tag t-api">HttpURLConnection</span><span class="tag t-data">ExecutorService + Handler</span><span class="tag t-ui">Fallback local</span></div>
           </div>
         </div>
 
         <div class="feat">
-          <div class="feat-head"><div class="feat-ico">🗺️</div><span class="feat-name">Navegación desde Inventario</span><span class="feat-kind">MENU</span></div>
+          <div class="feat-head"><div class="feat-ico">📐</div><span class="feat-name">Atributos y nivel inicial</span><span class="feat-kind">INTERACTIVA</span></div>
           <div class="feat-body">
-            <p>La barra inferior navega hacia Inicio (startActivity + finish()), Notas y muestra un AlertDialog estético para Ajustes. El ítem Inventario reproduce animación btn_press sin navegar (ya está en esta pantalla). Todas las transiciones usan <code>overridePendingTransition(fade_in, fade_out)</code>.</p>
-            <div class="tags"><span class="tag t-ui">pulsarYEjecutar()</span><span class="tag t-anim">fade_in / fade_out</span></div>
+            <p>Seis atributos editables con botones −/+ (rango 3–20) y modificador calculado en vivo. Un <code>SeekBar</code> permite elegir el nivel inicial (1–20); la XP inicial se calcula automáticamente con el umbral mínimo de ese nivel según la tabla oficial.</p>
+            <div class="tags"><span class="tag t-ui">SeekBar</span><span class="tag t-data">PersonajeModel.xpUmbralNivelActual()</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">🔥</div><span class="feat-name">Persistencia en Firestore</span><span class="feat-kind">BACKEND</span></div>
+          <div class="feat-body">
+            <p>El personaje se guarda en <code>usuarios/{uid}/personajes/{id}</code>. Antes de guardar, se consulta si el usuario ya tiene personajes: si es el primero, se marca <code>activo: true</code> automáticamente. Al volver a Inicio, <code>MainActivity</code> recarga la lista completa desde Firestore.</p>
+            <div class="tags"><span class="tag t-fb">Firestore add()</span><span class="tag t-fb">activo: boolean</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- PHONE -->
+    <div class="phone-col">
+      <div class="phone">
+        <div class="app">
+          <div class="app-header">
+            <div class="h-title">⚔ CREAR PERSONAJE</div>
+            <div class="h-sub">RAZAS VÍA OPEN5E API · FIRESTORE</div>
+          </div>
+          <div class="field-label">✦ NOMBRE DEL PERSONAJE</div>
+          <div class="field-sep"></div>
+          <div class="field-input">Ej: Arannis, Grog, Mercer...</div>
+
+          <div class="field-label">✦ RAZA</div>
+          <div class="field-sep"></div>
+          <div class="field-spinner"><span>Elfo de los Bosques</span><span>▾</span></div>
+          <div class="race-info-box">Atributos: +2 DES<br>Tamaño: Mediano · Velocidad: 30 pies</div>
+
+          <div class="field-label">✦ CLASE</div>
+          <div class="field-sep"></div>
+          <div class="field-spinner"><span>Mago</span><span>▾</span></div>
+
+          <div class="field-label">✦ NIVEL</div>
+          <div class="field-sep"></div>
+          <div style="display:flex;align-items:center;gap:4px;margin:0 4px">
+            <div style="flex:1;height:3px;background:var(--bg-stat);border-radius:2px;position:relative"><div style="position:absolute;left:0;top:0;width:22%;height:100%;background:var(--gold);border-radius:2px"></div></div>
+            <span style="color:var(--gold);font-size:11px;font-weight:700">5</span>
+          </div>
+
+          <div class="field-label">✦ ATRIBUTOS BASE</div>
+          <div class="field-sep"></div>
+          <div class="attr-edit-grid">
+            <div class="attr-edit-col"><div class="al">FUE</div><div class="av">8</div><div class="attr-edit-btns"><span>−</span><span>+</span></div></div>
+            <div class="attr-edit-col"><div class="al">DES</div><div class="av">14</div><div class="attr-edit-btns"><span>−</span><span>+</span></div></div>
+            <div class="attr-edit-col"><div class="al">CON</div><div class="av">14</div><div class="attr-edit-btns"><span>−</span><span>+</span></div></div>
+            <div class="attr-edit-col"><div class="al">INT</div><div class="av">18</div><div class="attr-edit-btns"><span>−</span><span>+</span></div></div>
+          </div>
+
+          <div class="create-btn">⚔ CREAR PERSONAJE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PANTALLA 3 — GRIMORIO ════════════════ -->
+<div id="p3" class="wrap screen-block">
+  <div class="sec-header reveal">
+    <span class="sec-num">03 — BIBLIOTECA DE HECHIZOS</span>
+    <h2 class="sec-title">Grimorio</h2>
+    <p class="sec-desc">Listado completo de hechizos del SRD de D&amp;D 5e, traído desde la Open5e API, con filtros combinables.</p>
+    <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
+  </div>
+
+  <div class="main-layout reveal">
+    <div class="phone-col">
+      <div class="phone">
+        <div class="app">
+          <div class="app-header">
+            <div class="h-title">📖 GRIMORIO ARCANO</div>
+            <div class="h-sub">TODOS LOS HECHIZOS · OPEN5E API</div>
+          </div>
+          <div class="filter-search">🔍 Buscar por nombre...</div>
+          <div class="filter-row">
+            <div class="filter-chip">Nivel 1 ▾</div>
+            <div class="filter-chip">Evocación ▾</div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-chip" style="flex:none;width:100%">wizard ▾</div>
+          </div>
+          <div class="a-sec" style="margin-top:6px">
+            <div class="spell-counter">14 hechizos encontrados</div>
+            <div class="spell-list-row">
+              <span class="sp-badge sp-n1">NIVEL 1</span>
+              <div class="spell-list-info">
+                <div class="spell-list-name">Misiles Mágicos</div>
+                <div class="spell-list-sub">Evocation · Acción</div>
+              </div>
+              <span class="sp-arrow">›</span>
+            </div>
+            <div class="spell-list-row">
+              <span class="sp-badge sp-n1">NIVEL 1</span>
+              <div class="spell-list-info">
+                <div class="spell-list-name">Rayo de Quemaduras</div>
+                <div class="spell-list-sub">Evocation · Acción</div>
+              </div>
+              <span class="sp-arrow">›</span>
+            </div>
+            <div class="spell-list-row">
+              <span class="sp-badge sp-n1">NIVEL 1</span>
+              <div class="spell-list-info">
+                <div class="spell-list-name">Flechas Ácidas</div>
+                <div class="spell-list-sub">Evocation · Acción · Ritual</div>
+              </div>
+              <span class="sp-arrow">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-col">
+      <div class="screen-label">
+        <span class="screen-tag">PANTALLA 03</span>
+        <span class="screen-name">SpellListActivity</span>
+      </div>
+      <p class="screen-intro">Único punto de acceso al grimorio completo, alcanzado desde el "Tomo Arcano" en Inicio. Carga progresivamente hasta 300 hechizos paginando la API y permite filtrarlos en tiempo real, sin nuevas llamadas de red por cada filtro.</p>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">🌐</div><span class="feat-name">Carga paginada desde la API</span><span class="feat-kind">API EXTERNA</span></div>
+          <div class="feat-body">
+            <p><code>GET /v1/spells/?limit=100&document__slug=wotc-srd</code>, siguiendo el campo <code>next</code> de la respuesta para traer hasta 3 páginas (300 hechizos). Todo en un <code>ExecutorService</code>, sin bloquear la UI.</p>
+            <div class="tags"><span class="tag t-api">Paginación por cursor</span><span class="tag t-data">org.json</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">🔎</div><span class="feat-name">Filtros combinables</span><span class="feat-kind">LOCAL</span></div>
+          <div class="feat-body">
+            <p>Cuatro filtros simultáneos sobre la lista ya descargada: <strong>nombre</strong> (texto libre con <code>TextWatcher</code>), <strong>nivel</strong> (Truco a Nivel 9), <strong>escuela de magia</strong> y <strong>clase</strong>. Cada cambio de filtro recalcula la lista visible al instante, sin llamadas de red adicionales.</p>
+            <div style="margin-top:10px">
+              <div class="flow-title">FLUJO DE FILTRADO</div>
+              <div class="flow-row"><span class="f-step trg">Cambia un filtro</span><span class="f-arr">→</span><span class="f-step">aplicarFiltros() sobre lista en memoria</span><span class="f-arr">→</span><span class="f-step ok">Lista re-renderizada</span></div>
+            </div>
+            <div class="tags"><span class="tag t-ui">4 Spinners + EditText</span><span class="tag t-data">Filtrado en memoria</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">📨</div><span class="feat-name">Navegación a detalle</span><span class="feat-kind">INTENT EXTRAS</span></div>
+          <div class="feat-body">
+            <p>Tap en cualquier hechizo → <code>DetalleHechizo</code> recibiendo 16 extras (nombre, descripción, nivel, escuela, componentes, material, etc.), igual que los hechizos fijos de Inicio.</p>
+            <div class="tags"><span class="tag t-data">16 Intent extras</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PANTALLA 4 — DETALLE HECHIZO ════════════════ -->
+<div id="p4" class="wrap screen-block">
+  <div class="sec-header reveal">
+    <span class="sec-num">04 — FICHA DE HECHIZO</span>
+    <h2 class="sec-title">Detalle de Hechizo</h2>
+    <p class="sec-desc">Ficha completa de un hechizo, con imagen descargada por URL usando Glide.</p>
+    <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
+  </div>
+
+  <div class="main-layout rev reveal">
+    <div class="info-col">
+      <div class="screen-label">
+        <span class="screen-tag">PANTALLA 04</span>
+        <span class="screen-name">DetalleHechizo</span>
+      </div>
+      <p class="screen-intro">Accesible tanto desde los 6 hechizos fijos de Inicio como desde cualquier resultado del Grimorio. Toda la información llega vía Intent extras; no hay una sola llamada de red propia en esta pantalla.</p>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">🖼️</div><span class="feat-name">Descarga de imagen con Glide</span><span class="feat-kind">RED</span></div>
+          <div class="feat-body">
+            <p>Los 6 hechizos fijos traen una URL de imagen alojada en Supabase. El resto de los hechizos (traídos de la API) llegan con <code>imagenUrl = null</code> y muestran un placeholder. Glide gestiona la carga con transición crossfade de 400ms y manejo de error automático.</p>
+            <div class="tags"><span class="tag t-api">Glide.with().load()</span><span class="tag t-ui">Placeholder + crossfade</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">📋</div><span class="feat-name">Datos alineados con la API</span><span class="feat-kind">ESTÁTICA</span></div>
+          <div class="feat-body">
+            <p>Tabla de propiedades (tiempo de lanzamiento, alcance, duración, componentes), sección de material cuando el hechizo lo requiere, y sección "En niveles superiores" cuando el hechizo escala con el nivel del espacio de conjuro usado — todos campos directos de la Open5e API.</p>
+            <div class="tags"><span class="tag t-data">16 campos vía extras</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone-col">
+      <div class="phone">
+        <div class="app">
+          <div class="dh-header">
+            <div class="dh-back">← VOLVER</div>
+            <div class="dh-badges">
+              <span class="sp-badge sp-n3">NIVEL 3</span>
+            </div>
+            <div class="dh-name">Bola de Fuego</div>
+            <div class="dh-class">Sorcerer, Wizard</div>
+          </div>
+          <div class="dh-image">🔥</div>
+          <div class="dh-props">
+            <div class="dh-prop"><div class="pl">TIEMPO</div><div class="pv">Acción</div></div>
+            <div class="dh-prop"><div class="pl">ALCANCE</div><div class="pv">150 pies</div></div>
+            <div class="dh-prop"><div class="pl">DURACIÓN</div><div class="pv">Instant.</div></div>
+            <div class="dh-prop"><div class="pl">COMP.</div><div class="pv">V,S,M</div></div>
+          </div>
+          <div class="dh-desc">
+            <div class="dh-desc-label">✦ DESCRIPCIÓN</div>
+            <div class="dh-desc-text">Un destello brillante explota en un punto elegido. Cada criatura en el área realiza salvación de Destreza CD 14...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PANTALLA 5 — INVENTARIO ════════════════ -->
+<div id="p5" class="wrap screen-block">
+  <div class="sec-header reveal">
+    <span class="sec-num">05 — GESTIÓN DE RECURSOS</span>
+    <h2 class="sec-title">Inventario</h2>
+    <p class="sec-desc">Gestión de carga, monedas y objetos del personaje. Accesible desde la barra de navegación inferior.</p>
+    <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
+  </div>
+
+  <div class="main-layout reveal">
     <div class="phone-col">
       <div class="phone">
         <div class="app">
@@ -854,7 +1228,6 @@ body::after {
             <div class="h-title">D&amp;D Companion</div>
             <div class="h-sub">INVENTARIO</div>
           </div>
-          <!-- Carga -->
           <div class="a-sec">
             <div class="a-sec-inner">
               <div class="a-sec-title">
@@ -865,7 +1238,6 @@ body::after {
               <div class="prog"><div class="prog-fill" style="width:10%"></div></div>
             </div>
           </div>
-          <!-- Monedas -->
           <div class="a-sec">
             <div class="a-sec-inner">
               <div class="a-sec-title">💰 MONEDAS</div>
@@ -878,7 +1250,6 @@ body::after {
               </div>
             </div>
           </div>
-          <!-- Objetos -->
           <div class="a-sec">
             <div class="a-sec-inner">
               <div class="a-sec-title">
@@ -912,20 +1283,87 @@ body::after {
         </div>
       </div>
     </div>
+
+    <div class="info-col">
+      <div class="screen-label">
+        <span class="screen-tag">PANTALLA 05</span>
+        <span class="screen-name">InventarioActivity</span>
+      </div>
+      <p class="screen-intro">Pantalla de gestión de recursos materiales. Organizada en tres secciones: carga actual del personaje, monedas en circulación y lista de objetos equipados/en mochila.</p>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">🎒</div><span class="feat-name">Capacidad de Carga</span><span class="feat-kind">VISUAL</span></div>
+          <div class="feat-body">
+            <p>Muestra el peso actual vs. el máximo soportado. Barra de progreso horizontal coloreada en dorado. Basado en el sistema D&amp;D: Fuerza × 15 libras de capacidad máxima.</p>
+            <div class="tags"><span class="tag t-ui">Barra proporción LinearLayout</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">💰</div><span class="feat-name">Monedas</span><span class="feat-kind">ESTÁTICA</span></div>
+          <div class="feat-body">
+            <p>Cuatro tipos de moneda D&amp;D 5e en columnas iguales: Piezas de Platino (PP), Oro (PO), Electrum (PE) y Cobre (PC). Las PO se destacan en dorado.</p>
+            <div class="tags"><span class="tag t-ui">4 columnas weight="1"</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">⚔</div><span class="feat-name">Lista de Objetos</span><span class="feat-kind">INTERACTIVA</span></div>
+          <div class="feat-body">
+            <p>Lista de objetos con ícono emoji, nombre, tipo, peso y propiedades. Badge "Eq." para equipados, cantidad "×N" para consumibles. Botón ＋ agrega objetos dinámicamente.</p>
+            <div class="tags"><span class="tag t-data">layoutObjetos dinámico</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════ PANTALLA 3 ════════════════ -->
-<div id="p3" class="wrap screen-block">
+<!-- ════════════════ PANTALLA 6 — NOTAS ════════════════ -->
+<div id="p6" class="wrap screen-block">
   <div class="sec-header reveal">
-    <span class="sec-num">03 — REGISTRO DE CAMPAÑA</span>
+    <span class="sec-num">06 — REGISTRO DE CAMPAÑA</span>
     <h2 class="sec-title">Notas</h2>
     <p class="sec-desc">Bitácora de campaña: diario de sesiones, registro de NPCs y bloc de notas en tiempo real.</p>
     <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
   </div>
 
-  <div class="main-layout reveal">
-    <!-- PHONE -->
+  <div class="main-layout rev reveal">
+    <div class="info-col">
+      <div class="screen-label">
+        <span class="screen-tag">PANTALLA 06</span>
+        <span class="screen-name">NotasActivity</span>
+      </div>
+      <p class="screen-intro">Bitácora personal del jugador. Tres secciones para registrar el progreso narrativo: diario cronológico, ficha de NPCs con indicador de relación y área de escritura libre.</p>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">📜</div><span class="feat-name">Diario de Aventuras</span><span class="feat-kind">REGISTRO</span></div>
+          <div class="feat-body">
+            <p>Tarjetas de entrada ordenadas cronológicamente por sesión, con título, fecha y texto narrativo. El botón ＋ del encabezado crea nuevas entradas.</p>
+            <div class="tags"><span class="tag t-ui">Tarjetas stat_bg</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">👥</div><span class="feat-name">NPCs Conocidos</span><span class="feat-kind">REFERENCIA</span></div>
+          <div class="feat-body">
+            <p>Indicador de relación mediante círculo de color: 🟢 verde para aliados, 🔴 rojo para antagonistas. Nombre, rol y última ubicación conocida.</p>
+            <div class="tags"><span class="tag t-ui">Indicador por color</span></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-head"><div class="feat-ico">✏️</div><span class="feat-name">Nota Rápida</span><span class="feat-kind">EDITABLE</span></div>
+          <div class="feat-body">
+            <p>Campo <code>EditText</code> multilinea para apuntes instantáneos. Confirmación de guardado vía <code>Toast</code>.</p>
+            <div class="tags"><span class="tag t-data">EditText multiLine</span><span class="tag t-ui">Toast confirmación</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="phone-col">
       <div class="phone">
         <div class="app">
@@ -933,14 +1371,13 @@ body::after {
             <div class="h-title">D&amp;D Companion</div>
             <div class="h-sub">NOTAS DE CAMPAÑA</div>
           </div>
-          <!-- Diario -->
           <div class="a-sec">
             <div class="a-sec-inner">
               <div class="a-sec-title"><span>📜 DIARIO DE AVENTURAS</span><span class="a-btn">＋</span></div>
               <div class="a-sep"></div>
               <div class="nota-card">
                 <div class="nota-head"><span class="nota-title">Sesión 1 — La Taberna del Oso</span><span class="nota-date">12/04</span></div>
-                <div class="nota-text">Nos encontramos con el mercader Harwick. Mencionó que los caminos al norte están infestados de bandidos. Hay algo más detrás...</div>
+                <div class="nota-text">Nos encontramos con el mercader Harwick. Mencionó que los caminos al norte están infestados de bandidos...</div>
               </div>
               <div class="nota-card">
                 <div class="nota-head"><span class="nota-title">Sesión 2 — Las Colinas del Eco</span><span class="nota-date">19/04</span></div>
@@ -948,7 +1385,6 @@ body::after {
               </div>
             </div>
           </div>
-          <!-- NPCs -->
           <div class="a-sec">
             <div class="a-sec-inner">
               <div class="a-sec-title">👥 NPCs CONOCIDOS</div>
@@ -963,7 +1399,6 @@ body::after {
               </div>
             </div>
           </div>
-          <!-- Nota rápida -->
           <div class="a-sec">
             <div class="a-sec-inner">
               <div class="a-sec-title">✏ NOTA RÁPIDA</div>
@@ -981,62 +1416,74 @@ body::after {
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- INFO -->
-    <div class="info-col">
-      <div class="screen-label">
-        <span class="screen-tag">PANTALLA 03</span>
-        <span class="screen-name">NotasActivity</span>
+<!-- ════════════════ SISTEMA DE XP ════════════════ -->
+<div id="xp" class="wrap">
+  <div class="sec-header reveal">
+    <span class="sec-num">07 — PROGRESIÓN DE PERSONAJE</span>
+    <h2 class="sec-title">Sistema de Experiencia y Nivel</h2>
+    <p class="sec-desc">Subida de nivel automática usando la tabla oficial de experiencia del Player's Handbook de D&amp;D 5e.</p>
+    <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
+  </div>
+
+  <div class="xp-table-wrap reveal">
+    <div style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start">
+      <div style="flex:1;min-width:280px">
+        <div class="flow-title" style="margin-bottom:14px">FLUJO COMPLETO</div>
+        <div class="flow-row"><span class="f-step trg">Misión activa</span><span class="f-arr">→</span><span class="f-step">Tap ✓ COMPLETAR</span></div>
+        <div class="flow-row"><span class="f-step">estado → "completada" en Firestore</span></div>
+        <div class="flow-row"><span class="f-step ok">xp += xpRecompensa de la misión</span></div>
+        <div class="flow-row"><span class="f-step">calcularNivelPorXp(xpTotal)</span><span class="f-arr">→</span><span class="f-step">compara contra XP_THRESHOLDS</span></div>
+        <div class="flow-row"><span class="f-step dlg">¿nivelNuevo > nivelAnterior?</span></div>
+        <div class="flow-row"><span class="f-step ok">Sí → diálogo "¡SUBISTE DE NIVEL!"</span></div>
+        <div class="flow-row"><span class="f-step">No → toast "+XP" discreto</span></div>
+        <p style="color:var(--text-sub);font-size:13px;margin-top:14px;line-height:1.6">El nivel y el XP acumulado se persisten en <code>usuarios/{uid}/personajes/{id}</code>, y la UI de Inicio se actualiza inmediatamente: barra de XP, nivel mostrado junto a la clase, y PG/CA estimados recalculados.</p>
       </div>
-      <p class="screen-intro">Bitácora personal del jugador. Tres secciones para registrar el progreso narrativo: diario cronológico de sesiones, ficha de NPCs con indicador de relación y área de escritura libre en tiempo real.</p>
-
-      <div class="features">
-        <div class="feat">
-          <div class="feat-head"><div class="feat-ico">📜</div><span class="feat-name">Diario de Aventuras</span><span class="feat-kind">REGISTRO</span></div>
-          <div class="feat-body">
-            <p>Tarjetas de entrada ordenadas cronológicamente por sesión. Cada tarjeta (<code>background: stat_bg</code>) muestra título de sesión en dorado claro, fecha alineada a la derecha y texto narrativo completo. El botón ＋ del encabezado crea nuevas entradas.</p>
-            <div style="margin-top:10px">
-              <div class="flow-title">FLUJO</div>
-              <div class="flow-row"><span class="f-step trg">Tap en ＋</span><span class="f-arr">→</span><span class="f-step dlg">Formulario nueva entrada</span><span class="f-arr">→</span><span class="f-step ok">Nueva tarjeta en el diario</span></div>
-            </div>
-            <div class="tags"><span class="tag t-ui">Tarjetas stat_bg</span><span class="tag t-data">Orden cronológico</span></div>
-          </div>
-        </div>
-
-        <div class="feat">
-          <div class="feat-head"><div class="feat-ico">👥</div><span class="feat-name">NPCs Conocidos</span><span class="feat-kind">REFERENCIA</span></div>
-          <div class="feat-body">
-            <p>Lista de personajes no jugadores relevantes. Indicador de relación mediante círculo de color: 🟢 verde para aliados, 🔴 rojo para antagonistas, 🟡 amarillo para neutrales. Nombre en negrita, rol y última ubicación conocida.</p>
-            <ul style="list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:5px">
-              <li style="display:flex;gap:8px;font-size:13.5px;color:var(--text-sub)"><span style="color:var(--gold-dim)">1.</span>El jugador identifica aliados y enemigos de un vistazo por el color del indicador.</li>
-              <li style="display:flex;gap:8px;font-size:13.5px;color:var(--text-sub)"><span style="color:var(--gold-dim)">2.</span>La ubicación ayuda a recordar dónde encontrar cada NPC en la campaña.</li>
-            </ul>
-            <div class="tags"><span class="tag t-ui">Indicador relación por color</span><span class="tag t-ui">Nombre + ubicación</span></div>
-          </div>
-        </div>
-
-        <div class="feat">
-          <div class="feat-head"><div class="feat-ico">✏️</div><span class="feat-name">Nota Rápida</span><span class="feat-kind">EDITABLE</span></div>
-          <div class="feat-body">
-            <p>Campo <code>EditText</code> multilinea para apuntes instantáneos durante la sesión. Fondo <code>stat_bg</code>, mínimo 4 líneas visibles, crece con el contenido. Al presionar GUARDAR NOTA muestra un Toast "✦ Nota guardada" — implementado en <code>NotasActivity.java</code> con <code>Toast.makeText()</code>.</p>
-            <div style="margin-top:10px">
-              <div class="flow-title">FLUJO</div>
-              <div class="flow-row"><span class="f-step trg">Tap en EditText</span><span class="f-arr">→</span><span class="f-step">Teclado, escritura libre</span><span class="f-arr">→</span><span class="f-step trg">Tap GUARDAR</span><span class="f-arr">→</span><span class="f-step ok">Toast "✦ Nota guardada"</span></div>
-            </div>
-            <div class="tags"><span class="tag t-data">EditText inputType multiLine</span><span class="tag t-ui">Toast confirmación</span></div>
-          </div>
-        </div>
+      <div style="flex:1;min-width:280px">
+        <table class="xp-table">
+          <tr><th>Nivel</th><th>XP requerida</th></tr>
+          <tr><td class="lvl">1</td><td>0</td></tr>
+          <tr><td class="lvl">2</td><td>300</td></tr>
+          <tr><td class="lvl">3</td><td>900</td></tr>
+          <tr><td class="lvl">4</td><td>2.700</td></tr>
+          <tr><td class="lvl">5</td><td>6.500</td></tr>
+          <tr><td class="lvl">10</td><td>64.000</td></tr>
+          <tr><td class="lvl">15</td><td>165.000</td></tr>
+          <tr><td class="lvl">20</td><td>355.000</td></tr>
+        </table>
+        <p style="color:var(--text-sub);font-size:12px;margin-top:10px;font-style:italic">Tabla completa de 20 niveles implementada en <code>PersonajeModel.XP_THRESHOLDS</code>.</p>
       </div>
     </div>
+  </div>
+
+  <div class="sec-header reveal" style="padding-top:0;padding-bottom:16px">
+    <span class="sec-num">MODELO DE DATOS EN FIRESTORE</span>
+  </div>
+  <div class="fs-tree reveal" style="margin-bottom:56px">
+<span class="coll">usuarios</span>/{uid}<br>
+│&nbsp;&nbsp;<span class="field">email</span>, <span class="field">ultimaConexion</span><br>
+│<br>
+├── <span class="coll">personajes</span>/{id}<br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">nombre</span>, <span class="field">raza</span>, <span class="field">clase</span>, <span class="field">alineacion</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">nivel</span>, <span class="field">xp</span>&nbsp;&nbsp;<span class="comment">// actualizados al completar misiones</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">fue</span>, <span class="field">des</span>, <span class="field">con</span>, <span class="field">int_</span>, <span class="field">sab</span>, <span class="field">car</span><br>
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">activo</span>: <span class="val">boolean</span>&nbsp;&nbsp;<span class="comment">// solo uno true por usuario</span><br>
+│<br>
+└── <span class="coll">misiones</span>/{id}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">nombre</span>, <span class="field">descripcion</span>, <span class="field">recompensa</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">xpRecompensa</span>: <span class="val">number</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="field">estado</span>: <span class="val">"disponible" | "activa" | "completada" | "cancelada"</span>
   </div>
 </div>
 
 <!-- ════════════════ FLUJO GLOBAL ════════════════ -->
 <div id="flujo" class="wrap">
   <div class="sec-header reveal">
-    <span class="sec-num">04 — FLUJO GLOBAL</span>
+    <span class="sec-num">08 — FLUJO GLOBAL</span>
     <h2 class="sec-title">Navegación entre Pantallas</h2>
-    <p class="sec-desc">Barra inferior fija compartida por las tres Activities. Transición con <code>overridePendingTransition(fade_in, fade_out)</code>. Ajustes muestra AlertDialog estético en todas las pantallas.</p>
+    <p class="sec-desc">Barra inferior fija compartida por Inicio, Inventario y Notas. Login es el punto de entrada único; Crear Personaje, Grimorio y Detalle de Hechizo se alcanzan desde Inicio.</p>
     <div class="ornament"><div class="orn-line orn-l"></div><span class="orn-d">✦</span><div class="orn-line orn-r"></div></div>
   </div>
 
@@ -1044,34 +1491,33 @@ body::after {
     <div class="gf-title">FUNCIONALIDADES POR PANTALLA</div>
     <div class="gf-grid">
       <div class="gf-col">
-        <div class="gf-col-title"><span class="gf-num">01</span> Inicio</div>
-        <div class="gf-item"><div class="gf-dot"></div>Ver ficha del personaje con avatar</div>
-        <div class="gf-item"><div class="gf-dot"></div>Seleccionar foto de galería para el avatar</div>
-        <div class="gf-item"><div class="gf-dot"></div>Aceptar misiones disponibles con animación</div>
-        <div class="gf-item"><div class="gf-dot"></div>Ver misiones activas generadas en tiempo real</div>
-        <div class="gf-item"><div class="gf-dot"></div>Agregar nuevas misiones disponibles</div>
-        <div class="gf-item"><div class="gf-dot"></div>Tap en hechizo → spellcard en diálogo</div>
-        <div class="gf-item"><div class="gf-dot"></div>Tirar dados (d4–d20) con animación ruleta</div>
-        <div class="gf-item"><div class="gf-dot"></div>Ver historial de las últimas 15 tiradas</div>
-        <div class="gf-item"><div class="gf-dot"></div>Dado especial d20 natural / pifia</div>
+        <div class="gf-col-title"><span class="gf-num">00-01</span> Login + Inicio</div>
+        <div class="gf-item"><div class="gf-dot"></div>Iniciar sesión o registrarse con Firebase Auth</div>
+        <div class="gf-item"><div class="gf-dot"></div>Ver/cambiar entre personajes guardados</div>
+        <div class="gf-item"><div class="gf-dot"></div>Crear personaje nuevo desde Inicio</div>
+        <div class="gf-item"><div class="gf-dot"></div>Ver XP, nivel e iniciativa del personaje activo</div>
+        <div class="gf-item"><div class="gf-dot"></div>Aceptar, completar o cancelar misiones</div>
+        <div class="gf-item"><div class="gf-dot"></div>Ganar XP y subir de nivel automáticamente</div>
+        <div class="gf-item"><div class="gf-dot"></div>Abrir el Tomo Arcano hacia el grimorio completo</div>
+        <div class="gf-item"><div class="gf-dot"></div>Tirar dados (d4–d20) con historial</div>
       </div>
       <div class="gf-col">
-        <div class="gf-col-title"><span class="gf-num">02</span> Inventario</div>
+        <div class="gf-col-title"><span class="gf-num">02-04</span> Personaje + Hechizos</div>
+        <div class="gf-item"><div class="gf-dot"></div>Elegir raza real desde la Open5e API</div>
+        <div class="gf-item"><div class="gf-dot"></div>Configurar clase, alineación, nivel y atributos</div>
+        <div class="gf-item"><div class="gf-dot"></div>Buscar hechizos por nombre en el grimorio</div>
+        <div class="gf-item"><div class="gf-dot"></div>Filtrar por nivel, escuela y clase combinados</div>
+        <div class="gf-item"><div class="gf-dot"></div>Ver ficha completa de cualquier hechizo</div>
+        <div class="gf-item"><div class="gf-dot"></div>Cargar imagen del hechizo desde URL con Glide</div>
+      </div>
+      <div class="gf-col">
+        <div class="gf-col-title"><span class="gf-num">05-06</span> Inventario + Notas</div>
         <div class="gf-item"><div class="gf-dot"></div>Ver capacidad de carga con barra visual</div>
-        <div class="gf-item"><div class="gf-dot"></div>Consultar balance de las 4 monedas D&D</div>
-        <div class="gf-item"><div class="gf-dot"></div>Listar objetos con tipo, peso y propiedades</div>
-        <div class="gf-item"><div class="gf-dot"></div>Identificar objetos equipados (badge "Eq.")</div>
-        <div class="gf-item"><div class="gf-dot"></div>Ver cantidad de consumibles (×N)</div>
-        <div class="gf-item"><div class="gf-dot"></div>Agregar nuevos objetos con botón ＋</div>
-      </div>
-      <div class="gf-col">
-        <div class="gf-col-title"><span class="gf-num">03</span> Notas</div>
-        <div class="gf-item"><div class="gf-dot"></div>Leer entradas del diario por sesión</div>
-        <div class="gf-item"><div class="gf-dot"></div>Crear nueva entrada de diario</div>
+        <div class="gf-item"><div class="gf-dot"></div>Consultar balance de las 4 monedas D&amp;D</div>
+        <div class="gf-item"><div class="gf-dot"></div>Listar y agregar objetos del inventario</div>
+        <div class="gf-item"><div class="gf-dot"></div>Leer y crear entradas del diario de campaña</div>
         <div class="gf-item"><div class="gf-dot"></div>Consultar NPCs con indicador de relación</div>
-        <div class="gf-item"><div class="gf-dot"></div>Identificar aliados y antagonistas por color</div>
-        <div class="gf-item"><div class="gf-dot"></div>Escribir nota rápida en tiempo real</div>
-        <div class="gf-item"><div class="gf-dot"></div>Guardar nota con confirmación Toast</div>
+        <div class="gf-item"><div class="gf-dot"></div>Escribir y guardar nota rápida</div>
       </div>
     </div>
 
@@ -1083,7 +1529,7 @@ body::after {
       <div class="gf-ni">📖<br>NOTAS</div>
       <span class="gf-arr">⟷</span>
       <div class="gf-ni">⚙<br>AJUSTES</div>
-      <p class="gf-note">Transición fade_in / fade_out · Ítem activo resaltado en dorado · Ajustes: AlertDialog en todas las pantallas</p>
+      <p class="gf-note">Transición fade_in / fade_out · Ítem activo resaltado en dorado · Login y Crear Personaje quedan fuera de la barra de navegación inferior</p>
     </div>
   </div>
 </div>
@@ -1091,8 +1537,8 @@ body::after {
 <!-- ════════════════ FOOTER ════════════════ -->
 <div class="footer wrap">
   <p>✦  ✦  ✦</p>
-  <p>D&amp;D Companion · Informe de Pantallas · Parcial 1</p>
-  <p>Android nativo Java · ConstraintLayout + LinearLayout · Conventional Commits</p>
+  <p>D&amp;D Companion · Informe de Pantallas · Parcial 2</p>
+  <p>Android nativo Java · Firebase Auth/Firestore · Open5e API · Glide · Conventional Commits</p>
   <p style="margin-top:10px">
     <a href="https://github.com/Krayxzlim/parcial-1-am-acn4a-aufieri_luciano"
        style="color:var(--gold-light);font-family:'JetBrains Mono',monospace;font-size:12px">
