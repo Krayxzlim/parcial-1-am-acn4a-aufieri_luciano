@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,17 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -37,25 +38,29 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_USER_EMAIL = "user_email";
 
-    //Firebase
+    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private String userEmail = "";
+    private String uid = null;
 
-    //Vistas
+    // Vistas
     LinearLayout layoutDisponibles, layoutActivas, layoutSpells;
     TextView txtResultado, txtTipoDado;
     ImageView imgAvatar;
 
-    // Vistas del personaje (placeholder)
-    TextView txtNombrePersonaje, txtRazaPersonaje, txtClasePersonaje,
-            txtAlineacionPersonaje, txtPersonajePlaceholder;
-    TextView txtCA, txtPG, txtNivelStat;
+    // Vistas del personaje
+    TextView txtNombrePersonaje, txtRazaPersonaje, txtClasePersonaje, txtAlineacionPersonaje,
+            txtPersonajePlaceholder;
+    TextView txtCA, txtPG, txtIniciativa;
     TextView txtFUE, txtDES, txtCON, txtINT, txtSAB, txtCAR;
     TextView txtFUEmod, txtDESmod, txtCONmod, txtINTmod, txtSABmod, txtCARmod;
-    LinearLayout layoutAvatarPlaceholder;
+    LinearLayout layoutAvatarPlaceholder, layoutXpBar;
+    TextView txtNivelXp, txtXpActual;
+    View barraXpFill;
+    TextView btnCambiarPersonaje, txtSinMisionesActivas;
 
-    //Launchers
+    // Launchers
     ActivityResultLauncher<String> pickImageLauncher;
     ActivityResultLauncher<Intent> crearPersonajeLauncher;
 
@@ -63,7 +68,11 @@ public class MainActivity extends AppCompatActivity {
     Random random = new Random();
     ArrayList<String> historial = new ArrayList<>();
 
-    Animation animBtn, animDado;
+    // Estado de personajes/misiones
+    private final List<PersonajeModel> misPersonajes = new ArrayList<>();
+    private PersonajeModel personajeActivo = null; // null = sin personaje creado
+    private final Map<String, LinearLayout> vistasMisionesActivas = new HashMap<>();
+    private final Map<String, LinearLayout> vistasMisionesDisponibles = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db    = FirebaseFirestore.getInstance();
+        if (mAuth.getCurrentUser() != null) uid = mAuth.getCurrentUser().getUid();
 
-        // Launcher para seleccionar imagen del avatar
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -87,51 +96,34 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        // Launcher para recibir resultado del CrearPersonajeActivity
         crearPersonajeLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Intent data = result.getData();
-                        aplicarDatosPersonaje(
-                                data.getStringExtra("personaje_nombre"),
-                                data.getStringExtra("personaje_raza"),
-                                data.getStringExtra("personaje_clase"),
-                                data.getIntExtra("personaje_nivel", 1),
-                                data.getStringExtra("personaje_alineacion"),
-                                data.getIntExtra("personaje_fue", 10),
-                                data.getIntExtra("personaje_des", 10),
-                                data.getIntExtra("personaje_con", 10),
-                                data.getIntExtra("personaje_int", 10),
-                                data.getIntExtra("personaje_sab", 10),
-                                data.getIntExtra("personaje_car", 10)
-                        );
+                    if (result.getResultCode() == RESULT_OK) {
+                        // Recargar lista de personajes desde Firestore (incluye el nuevo)
+                        cargarPersonajesDesdeFirestore();
                     }
                 }
         );
 
         setContentView(R.layout.activity_main);
 
-        animBtn  = AnimationUtils.loadAnimation(this, R.anim.btn_press);
-        animDado = AnimationUtils.loadAnimation(this, R.anim.dado_roll);
-
-        //Bindear vistas
         layoutDisponibles = findViewById(R.id.layoutDisponibles);
         layoutActivas     = findViewById(R.id.layoutActivas);
         layoutSpells      = findViewById(R.id.layoutSpells);
         txtResultado      = findViewById(R.id.txtResultado);
         txtTipoDado       = findViewById(R.id.txtTipoDado);
         imgAvatar         = findViewById(R.id.imgAvatar);
+        txtSinMisionesActivas = findViewById(R.id.txtSinMisionesActivas);
 
-        // Personaje
-        txtNombrePersonaje    = findViewById(R.id.txtNombrePersonaje);
-        txtRazaPersonaje      = findViewById(R.id.txtRazaPersonaje);
-        txtClasePersonaje     = findViewById(R.id.txtClasePersonaje);
-        txtAlineacionPersonaje= findViewById(R.id.txtAlineacionPersonaje);
+        txtNombrePersonaje     = findViewById(R.id.txtNombrePersonaje);
+        txtRazaPersonaje       = findViewById(R.id.txtRazaPersonaje);
+        txtClasePersonaje      = findViewById(R.id.txtClasePersonaje);
+        txtAlineacionPersonaje = findViewById(R.id.txtAlineacionPersonaje);
         txtPersonajePlaceholder= findViewById(R.id.txtPersonajePlaceholder);
-        txtCA                 = findViewById(R.id.txtCA);
-        txtPG                 = findViewById(R.id.txtPG);
-        txtNivelStat          = findViewById(R.id.txtNivelStat);
+        txtCA          = findViewById(R.id.txtCA);
+        txtPG          = findViewById(R.id.txtPG);
+        txtIniciativa  = findViewById(R.id.txtIniciativa);
         txtFUE = findViewById(R.id.txtFUE); txtFUEmod = findViewById(R.id.txtFUEmod);
         txtDES = findViewById(R.id.txtDES); txtDESmod = findViewById(R.id.txtDESmod);
         txtCON = findViewById(R.id.txtCON); txtCONmod = findViewById(R.id.txtCONmod);
@@ -139,46 +131,53 @@ public class MainActivity extends AppCompatActivity {
         txtSAB = findViewById(R.id.txtSAB); txtSABmod = findViewById(R.id.txtSABmod);
         txtCAR = findViewById(R.id.txtCAR); txtCARmod = findViewById(R.id.txtCARmod);
         layoutAvatarPlaceholder = findViewById(R.id.layoutAvatarPlaceholder);
+        layoutXpBar    = findViewById(R.id.layoutXpBar);
+        txtNivelXp     = findViewById(R.id.txtNivelXp);
+        txtXpActual    = findViewById(R.id.txtXpActual);
+        barraXpFill    = findViewById(R.id.barraXpFill);
+        btnCambiarPersonaje = findViewById(R.id.btnCambiarPersonaje);
 
-        //Click en avatar placeholder → galería
+        // Avatar → galería
         imgAvatar.setOnClickListener(v -> {
             v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
             pickImageLauncher.launch("image/*");
         });
-        layoutAvatarPlaceholder.setOnClickListener(v ->
-                pickImageLauncher.launch("image/*"));
+        layoutAvatarPlaceholder.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
-        //Header "TU PERSONAJE" → CrearPersonajeActivity
-        View btnHeaderPersonaje = findViewById(R.id.btnHeaderPersonaje);
-        btnHeaderPersonaje.setOnClickListener(v -> {
+        // Header "TU PERSONAJE" → editar personaje activo o crear uno
+        findViewById(R.id.btnHeaderPersonaje).setOnClickListener(v -> {
             v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                Intent i = new Intent(this, CrearPersonajeActivity.class);
-                i.putExtra(EXTRA_USER_EMAIL, userEmail);
-                crearPersonajeLauncher.launch(i);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
+            new Handler(Looper.getMainLooper()).postDelayed(this::abrirCrearPersonaje, 150);
         });
 
-        //Tomo Arcano + "VER TODOS" → SpellListActivity
-        View btnTomo = findViewById(R.id.btnTomoArcano);
-        btnTomo.setOnClickListener(v -> {
+        // "✦ NUEVO" → siempre crea uno nuevo
+        findViewById(R.id.btnNuevoPersonaje).setOnClickListener(v -> {
             v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
-            new Handler(Looper.getMainLooper()).postDelayed(() -> abrirGrimorio(), 150);
+            new Handler(Looper.getMainLooper()).postDelayed(this::abrirCrearPersonaje, 150);
         });
 
-        View txtVerTodos = findViewById(R.id.txtVerTodosHechizos);
-        txtVerTodos.setOnClickListener(v -> abrirGrimorio());
+        //"⇄ CAMBIAR" → selector de personajes
+        btnCambiarPersonaje.setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            mostrarSelectorPersonajes();
+        });
 
-        //Cargar misiones desde Firestore
+        // Tomo Arcano → SpellListActivity
+        findViewById(R.id.btnTomoArcano).setOnClickListener(v -> {
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(this::abrirGrimorio, 150);
+        });
+
+        // Cargar datos persistentes
+        cargarPersonajesDesdeFirestore();
         cargarMisionesDesdeFirestore();
 
-        //Hechizos fijos (con imagen personalizada de Supabase)
+        //  Hechizos fijos (con imagen personalizada de Supabase)
         for (SpellModel spell : SpellModel.getHechizosFijos()) {
             agregarSpell(spell);
         }
 
-        //Dados
+        // Dados
         configurarBtnDado(R.id.btnD4,  4);
         configurarBtnDado(R.id.btnD6,  6);
         configurarBtnDado(R.id.btnD8,  8);
@@ -197,71 +196,34 @@ public class MainActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(this::mostrarHistorial, 150);
         });
 
-        //Nueva misión
         findViewById(R.id.btnAgregar).setOnClickListener(v -> {
             v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
             contador++;
-            agregarMisionDisponible("Nueva misión " + contador,
+            crearMisionEnFirestore("Nueva misión " + contador,
                     "Una misión misteriosa te aguarda.", "50 XP");
         });
 
         configurarMenu();
 
-        // Guardar sesión en Firestore si hay usuario logueado
         if (!userEmail.isEmpty()) guardarSesionEnFirestore();
     }
 
-    //Aplicar datos de personaje creado
-    private void aplicarDatosPersonaje(String nombre, String raza, String clase, int nivel,
-                                       String alineacion, int fue, int des, int con,
-                                       int intVal, int sab, int car) {
-        if (nombre != null) {
-            txtNombrePersonaje.setText(nombre);
-            txtNombrePersonaje.setTextColor(color(R.color.texto));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refrescar por si se editaron datos en otra pantalla
+        if (uid != null && personajeActivo != null) {
+            // Solo refresca visualmente, no vuelve a pegarle a la red
         }
-        if (raza != null) {
-            txtRazaPersonaje.setText(raza);
-            txtRazaPersonaje.setTextColor(color(R.color.texto_secundario));
-        }
-        if (clase != null) {
-            txtClasePersonaje.setText(clase + " Nivel " + nivel);
-            txtClasePersonaje.setTextColor(color(R.color.texto_secundario));
-        }
-        if (alineacion != null) {
-            txtAlineacionPersonaje.setText(alineacion);
-            txtAlineacionPersonaje.setTextColor(color(R.color.texto_secundario));
-        }
-
-        txtNivelStat.setText(String.valueOf(nivel));
-        txtNivelStat.setTextColor(color(R.color.texto));
-
-        // CA estimada (10 + mod DES) y PG estimados (nivel * 6)
-        int modDes = (des - 10) / 2;
-        txtCA.setText(String.valueOf(10 + modDes));
-        txtCA.setTextColor(color(R.color.texto));
-        txtPG.setText(String.valueOf(nivel * 6));
-        txtPG.setTextColor(color(R.color.texto));
-
-        // Atributos
-        setAtributo(txtFUE, txtFUEmod, fue);
-        setAtributo(txtDES, txtDESmod, des);
-        setAtributo(txtCON, txtCONmod, con);
-        setAtributo(txtINT, txtINTmod, intVal);
-        setAtributo(txtSAB, txtSABmod, sab);
-        setAtributo(txtCAR, txtCARmod, car);
-
-        // Ocultar placeholder
-        txtPersonajePlaceholder.setVisibility(View.GONE);
     }
 
-    private void setAtributo(TextView txtVal, TextView txtMod, int valor) {
-        txtVal.setText(String.valueOf(valor));
-        txtVal.setTextColor(color(R.color.texto));
-        int mod = (valor - 10) / 2;
-        txtMod.setText(mod >= 0 ? "(+" + mod + ")" : "(" + mod + ")");
+    private void abrirCrearPersonaje() {
+        Intent i = new Intent(this, CrearPersonajeActivity.class);
+        i.putExtra(EXTRA_USER_EMAIL, userEmail);
+        crearPersonajeLauncher.launch(i);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    //Abrir grimorio de hechizos
     private void abrirGrimorio() {
         Intent i = new Intent(this, SpellListActivity.class);
         i.putExtra(EXTRA_USER_EMAIL, userEmail);
@@ -269,65 +231,688 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    //Firebase
-    private void guardarSesionEnFirestore() {
-        if (mAuth.getCurrentUser() == null) return;
-        String uid = mAuth.getCurrentUser().getUid();
-        Map<String, Object> datos = new HashMap<>();
-        datos.put("email", userEmail);
-        datos.put("ultimaConexion", com.google.firebase.Timestamp.now());
-        db.collection("usuarios").document(uid).set(datos);
-    }
+    // PERSONAJES — Firestore: usuarios/{uid}/personajes/{id}
 
-    private void cargarMisionesDesdeFirestore() {
-        if (mAuth.getCurrentUser() == null) {
-            cargarMisionesDefault();
+    private void cargarPersonajesDesdeFirestore() {
+        if (uid == null) {
+            // Sin sesión: no hay persistencia, queda en placeholder
             return;
         }
-        String uid = mAuth.getCurrentUser().getUid();
-        db.collection("usuarios").document(uid)
-                .collection("misiones")
+        db.collection("usuarios").document(uid).collection("personajes")
                 .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    if (querySnapshot.isEmpty()) {
-                        cargarMisionesDefault();
-                        guardarMisionesDefault(uid);
-                    } else {
-                        for (com.google.firebase.firestore.DocumentSnapshot doc
-                                : querySnapshot.getDocuments()) {
-                            String nombre      = doc.getString("nombre");
-                            String descripcion = doc.getString("descripcion");
-                            String recompensa  = doc.getString("recompensa");
-                            if (nombre != null)
-                                agregarMisionDisponible(nombre,
-                                        descripcion != null ? descripcion : "",
-                                        recompensa  != null ? recompensa  : "");
-                        }
+                .addOnSuccessListener(query -> {
+                    misPersonajes.clear();
+                    PersonajeModel activoEncontrado = null;
+
+                    for (QueryDocumentSnapshot doc : query) {
+                        PersonajeModel p = docToPersonaje(doc);
+                        misPersonajes.add(p);
+                        if (p.activo) activoEncontrado = p;
                     }
-                })
-                .addOnFailureListener(e -> cargarMisionesDefault());
+
+                    // Si no hay ninguno marcado como activo, usar el primero
+                    if (activoEncontrado == null && !misPersonajes.isEmpty()) {
+                        activoEncontrado = misPersonajes.get(0);
+                        marcarComoActivo(activoEncontrado);
+                    }
+
+                    personajeActivo = activoEncontrado;
+                    aplicarPersonajeActivoEnUI();
+
+                    // Mostrar botón "CAMBIAR" solo si hay 2+ personajes
+                    btnCambiarPersonaje.setVisibility(
+                            misPersonajes.size() > 1 ? View.VISIBLE : View.GONE);
+                });
     }
 
-    private void cargarMisionesDefault() {
-        agregarMisionDisponible("Entrega especial",
+    private PersonajeModel docToPersonaje(DocumentSnapshot doc) {
+        PersonajeModel p = new PersonajeModel();
+        p.id = doc.getId();
+        p.nombre     = doc.getString("nombre");
+        p.raza       = doc.getString("raza");
+        p.clase      = doc.getString("clase");
+        p.alineacion = doc.getString("alineacion");
+        Long nivelL  = doc.getLong("nivel");
+        p.nivel      = nivelL != null ? nivelL.intValue() : 1;
+        Long xpL     = doc.getLong("xp");
+        p.xp         = xpL != null ? xpL : 0L;
+        p.fue   = safeInt(doc.getLong("fue"), 10);
+        p.des   = safeInt(doc.getLong("des"), 10);
+        p.con   = safeInt(doc.getLong("con"), 10);
+        p.intel = safeInt(doc.getLong("int_"), 10);
+        p.sab   = safeInt(doc.getLong("sab"), 10);
+        p.car   = safeInt(doc.getLong("car"), 10);
+        Boolean activoB = doc.getBoolean("activo");
+        p.activo = activoB != null && activoB;
+        return p;
+    }
+
+    private int safeInt(Long val, int def) {
+        return val != null ? val.intValue() : def;
+    }
+
+    /** Marca un personaje como activo en Firestore (desmarca los demás). */
+    private void marcarComoActivo(PersonajeModel nuevoActivo) {
+        if (uid == null) return;
+        for (PersonajeModel p : misPersonajes) {
+            boolean esEste = p.id.equals(nuevoActivo.id);
+            p.activo = esEste;
+            db.collection("usuarios").document(uid)
+                    .collection("personajes").document(p.id)
+                    .update("activo", esEste);
+        }
+    }
+
+    private void aplicarPersonajeActivoEnUI() {
+        if (personajeActivo == null) {
+            // Estado placeholder
+            txtNombrePersonaje.setText("Nombre");
+            txtRazaPersonaje.setText("Especie");
+            txtClasePersonaje.setText("Clase");
+            txtAlineacionPersonaje.setText("Alineamiento");
+            txtNombrePersonaje.setTextColor(color(R.color.texto_secundario));
+            txtCA.setText("-"); txtPG.setText("-"); txtIniciativa.setText("-");
+            txtCA.setTextColor(color(R.color.texto_secundario));
+            txtPG.setTextColor(color(R.color.texto_secundario));
+            txtIniciativa.setTextColor(color(R.color.texto_secundario));
+            limpiarAtributo(txtFUE, txtFUEmod);
+            limpiarAtributo(txtDES, txtDESmod);
+            limpiarAtributo(txtCON, txtCONmod);
+            limpiarAtributo(txtINT, txtINTmod);
+            limpiarAtributo(txtSAB, txtSABmod);
+            limpiarAtributo(txtCAR, txtCARmod);
+            txtPersonajePlaceholder.setVisibility(View.VISIBLE);
+            layoutXpBar.setVisibility(View.GONE);
+            return;
+        }
+
+        PersonajeModel p = personajeActivo;
+        txtNombrePersonaje.setText(p.nombre);
+        txtNombrePersonaje.setTextColor(color(R.color.texto));
+        txtRazaPersonaje.setText(p.raza);
+        txtRazaPersonaje.setTextColor(color(R.color.texto_secundario));
+        txtClasePersonaje.setText(p.clase + " Nivel " + p.nivel);
+        txtClasePersonaje.setTextColor(color(R.color.texto_secundario));
+        txtAlineacionPersonaje.setText(p.alineacion);
+        txtAlineacionPersonaje.setTextColor(color(R.color.texto_secundario));
+
+        txtCA.setText(String.valueOf(p.getCaEstimada()));
+        txtCA.setTextColor(color(R.color.texto));
+        txtPG.setText(String.valueOf(p.getPgEstimados()));
+        txtPG.setTextColor(color(R.color.texto));
+
+        // Iniciativa = modificador de Destreza (D&D 5e)
+        int iniciativa = p.getIniciativa();
+        txtIniciativa.setText(PersonajeModel.formatMod(iniciativa));
+        txtIniciativa.setTextColor(color(R.color.texto));
+
+        setAtributo(txtFUE, txtFUEmod, p.fue);
+        setAtributo(txtDES, txtDESmod, p.des);
+        setAtributo(txtCON, txtCONmod, p.con);
+        setAtributo(txtINT, txtINTmod, p.intel);
+        setAtributo(txtSAB, txtSABmod, p.sab);
+        setAtributo(txtCAR, txtCARmod, p.car);
+
+        txtPersonajePlaceholder.setVisibility(View.GONE);
+
+        // Barra de XP
+        actualizarBarraXp(p);
+    }
+
+    private void actualizarBarraXp(PersonajeModel p) {
+        if (p.nivel >= 20) {
+            layoutXpBar.setVisibility(View.VISIBLE);
+            txtNivelXp.setText("Nivel 20 (máximo)");
+            txtXpActual.setText(p.xp + " XP");
+            ((LinearLayout.LayoutParams) barraXpFill.getLayoutParams()).weight = 1f;
+            barraXpFill.requestLayout();
+            return;
+        }
+        layoutXpBar.setVisibility(View.VISIBLE);
+        long siguienteUmbral = PersonajeModel.xpParaSiguienteNivel(p.nivel);
+        txtNivelXp.setText("Nivel " + p.nivel);
+        txtXpActual.setText(p.xp + " / " + siguienteUmbral + " XP");
+
+        float progreso = PersonajeModel.progresoNivelActual(p.xp, p.nivel);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barraXpFill.getLayoutParams();
+        lp.weight = Math.max(0.02f, progreso); // mínimo visible
+        barraXpFill.setLayoutParams(lp);
+    }
+
+    private void limpiarAtributo(TextView txtVal, TextView txtMod) {
+        txtVal.setText("-");
+        txtVal.setTextColor(color(R.color.texto_secundario));
+        txtMod.setText("");
+    }
+
+    private void setAtributo(TextView txtVal, TextView txtMod, int valor) {
+        txtVal.setText(String.valueOf(valor));
+        txtVal.setTextColor(color(R.color.texto));
+        int mod = PersonajeModel.modificador(valor);
+        txtMod.setText(PersonajeModel.formatMod(mod));
+        txtMod.setTextColor(color(R.color.texto_secundario));
+    }
+
+    /** Diálogo selector cuando hay múltiples personajes. */
+    private void mostrarSelectorPersonajes() {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundResource(R.drawable.seccion_bg);
+        root.setPadding(dp(16), dp(20), dp(16), dp(16));
+
+        TextView t = txt("✦  TUS PERSONAJES  ✦", 14, R.color.dorado, true);
+        t.setTypeface(Typeface.create("serif", Typeface.BOLD));
+        t.setGravity(Gravity.CENTER);
+        root.addView(t);
+        root.addView(separadorDorado());
+
+        ScrollView scroll = new ScrollView(this);
+        scroll.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(280)));
+        LinearLayout lista = new LinearLayout(this);
+        lista.setOrientation(LinearLayout.VERTICAL);
+        lista.setPadding(0, dp(8), 0, dp(8));
+
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.DialogoOscuro)
+                .setView(root).create();
+
+        for (PersonajeModel p : misPersonajes) {
+            LinearLayout item = new LinearLayout(this);
+            item.setOrientation(LinearLayout.HORIZONTAL);
+            item.setGravity(Gravity.CENTER_VERTICAL);
+            item.setPadding(dp(10), dp(10), dp(10), dp(10));
+            item.setBackgroundResource(R.drawable.stat_bg);
+            LinearLayout.LayoutParams itemLp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            itemLp.setMargins(0, 0, 0, dp(6));
+            item.setLayoutParams(itemLp);
+            item.setClickable(true);
+            item.setFocusable(true);
+
+            LinearLayout info = new LinearLayout(this);
+            info.setOrientation(LinearLayout.VERTICAL);
+            info.setLayoutParams(new LinearLayout.LayoutParams(0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+            TextView nom = txt(p.nombre, 14, R.color.texto, true);
+            TextView sub = txt(p.raza + " · " + p.clase + " Nv." + p.nivel,
+                    11, R.color.texto_secundario, false);
+            info.addView(nom);
+            info.addView(sub);
+            item.addView(info);
+
+            if (p.activo) {
+                TextView badge = txt("ACTIVO", 9, R.color.dorado, true);
+                badge.setBackgroundColor(color(R.color.boton_bg));
+                badge.setPadding(dp(8), dp(4), dp(8), dp(4));
+                item.addView(badge);
+            }
+
+            item.setOnClickListener(v -> {
+                if (!p.activo) {
+                    marcarComoActivo(p);
+                    personajeActivo = p;
+                    aplicarPersonajeActivoEnUI();
+                }
+                dialog.dismiss();
+            });
+            lista.addView(item);
+        }
+        scroll.addView(lista);
+        root.addView(scroll);
+        root.addView(separadorDorado());
+
+        Button btnNuevo = new Button(this);
+        btnNuevo.setText("✦  CREAR NUEVO PERSONAJE");
+        btnNuevo.setTextColor(color(R.color.dorado));
+        btnNuevo.setTextSize(12);
+        btnNuevo.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
+        LinearLayout.LayoutParams bnLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(44));
+        bnLp.setMargins(0, dp(12), 0, dp(6));
+        btnNuevo.setLayoutParams(bnLp);
+        btnNuevo.setOnClickListener(v -> {
+            dialog.dismiss();
+            abrirCrearPersonaje();
+        });
+        root.addView(btnNuevo);
+
+        Button btnCerrar = new Button(this);
+        btnCerrar.setText("CERRAR");
+        btnCerrar.setTextColor(color(R.color.texto_secundario));
+        btnCerrar.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
+        btnCerrar.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(40)));
+        btnCerrar.setOnClickListener(v -> dialog.dismiss());
+        root.addView(btnCerrar);
+
+        if (dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+    }
+
+    /** Suma XP al personaje activo y aplica level-up automático si corresponde. */
+    private void otorgarXpAPersonajeActivo(long xpGanada) {
+        if (personajeActivo == null || uid == null) return;
+
+        long xpNueva = personajeActivo.xp + xpGanada;
+        int nivelAnterior = personajeActivo.nivel;
+        int nivelNuevo = PersonajeModel.calcularNivelPorXp(xpNueva);
+
+        personajeActivo.xp = xpNueva;
+        personajeActivo.nivel = nivelNuevo;
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("xp", xpNueva);
+        updates.put("nivel", nivelNuevo);
+
+        db.collection("usuarios").document(uid)
+                .collection("personajes").document(personajeActivo.id)
+                .update(updates);
+
+        aplicarPersonajeActivoEnUI();
+
+        if (nivelNuevo > nivelAnterior) {
+            mostrarDialogoLevelUp(nivelAnterior, nivelNuevo);
+        } else {
+            mostrarToastXp(xpGanada);
+        }
+    }
+
+    private void mostrarToastXp(long xpGanada) {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundResource(R.drawable.seccion_bg);
+        root.setPadding(dp(20), dp(16), dp(20), dp(16));
+        TextView t = txt("✦  +" + xpGanada + " XP  ✦", 16, R.color.dorado, true);
+        t.setGravity(Gravity.CENTER);
+        root.addView(t);
+        AlertDialog d = new AlertDialog.Builder(this, R.style.DialogoOscuro).setView(root).create();
+        if (d.getWindow() != null) d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        d.show();
+        new Handler(Looper.getMainLooper()).postDelayed(d::dismiss, 1200);
+    }
+
+    private void mostrarDialogoLevelUp(int nivelAnterior, int nivelNuevo) {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundResource(R.drawable.seccion_bg);
+        root.setPadding(dp(20), dp(24), dp(20), dp(20));
+
+        TextView icon = txt("⬆️", 40, R.color.dorado, false);
+        icon.setGravity(Gravity.CENTER);
+        icon.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        root.addView(icon);
+
+        TextView t = txt("¡SUBISTE DE NIVEL!", 16, R.color.dorado, true);
+        t.setTypeface(Typeface.create("serif", Typeface.BOLD));
+        t.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams tLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tLp.setMargins(0, dp(8), 0, dp(4));
+        t.setLayoutParams(tLp);
+        root.addView(t);
+
+        TextView sub = txt("Nivel " + nivelAnterior + "  →  Nivel " + nivelNuevo,
+                14, R.color.texto, false);
+        sub.setGravity(Gravity.CENTER);
+        root.addView(sub);
+
+        root.addView(separadorDorado());
+
+        Button btn = new Button(this);
+        btn.setText("¡EXCELENTE!");
+        btn.setTextColor(color(R.color.dorado));
+        btn.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
+        LinearLayout.LayoutParams bLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(44));
+        bLp.setMargins(0, dp(12), 0, 0);
+        btn.setLayoutParams(bLp);
+        root.addView(btn);
+
+        AlertDialog d = new AlertDialog.Builder(this, R.style.DialogoOscuro).setView(root).create();
+        if (d.getWindow() != null) d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        btn.setOnClickListener(v -> d.dismiss());
+        d.show();
+    }
+
+    // MISIONES — Firestore: usuarios/{uid}/misiones/{id}
+    // Estados: disponible | activa | completada | cancelada
+
+    private void cargarMisionesDesdeFirestore() {
+        if (uid == null) {
+            cargarMisionesDefaultLocal();
+            return;
+        }
+        db.collection("usuarios").document(uid).collection("misiones")
+                .get()
+                .addOnSuccessListener(query -> {
+                    if (query.isEmpty()) {
+                        crearMisionesDefault();
+                        return;
+                    }
+                    layoutDisponibles.removeAllViews();
+                    layoutActivas.removeAllViews();
+                    vistasMisionesActivas.clear();
+                    vistasMisionesDisponibles.clear();
+
+                    for (QueryDocumentSnapshot doc : query) {
+                        MisionModel m = docToMision(doc);
+                        if ("disponible".equals(m.estado)) {
+                            renderMisionDisponible(m);
+                        } else if ("activa".equals(m.estado)) {
+                            renderMisionActiva(m);
+                        }
+                        // completada/cancelada no se muestran en Inicio
+                    }
+                    actualizarVisibilidadSinMisiones();
+                });
+    }
+
+    private MisionModel docToMision(DocumentSnapshot doc) {
+        MisionModel m = new MisionModel();
+        m.id = doc.getId();
+        m.nombre = doc.getString("nombre");
+        m.descripcion = doc.getString("descripcion");
+        m.recompensa = doc.getString("recompensa");
+        Long xpL = doc.getLong("xpRecompensa");
+        m.xpRecompensa = xpL != null ? xpL : MisionModel.extraerXp(m.recompensa);
+        m.estado = doc.getString("estado");
+        if (m.estado == null) m.estado = "disponible";
+        return m;
+    }
+
+    private void crearMisionesDefault() {
+        crearMisionEnFirestore("Entrega especial",
                 "Entrega un paquete sellado al Gremio de Comerciantes.", "100 XP");
-        agregarMisionDisponible("Caza de bandidos",
+        crearMisionEnFirestore("Caza de bandidos",
                 "Elimina a los bandidos del camino del norte.", "200 XP");
     }
 
-    private void guardarMisionesDefault(String uid) {
-        String[][] misiones = {
-                {"Entrega especial", "Entrega un paquete sellado al Gremio de Comerciantes.", "100 XP"},
-                {"Caza de bandidos", "Elimina a los bandidos del camino del norte.", "200 XP"}
-        };
-        for (String[] m : misiones) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("nombre", m[0]); data.put("descripcion", m[1]); data.put("recompensa", m[2]);
-            db.collection("usuarios").document(uid).collection("misiones").add(data);
-        }
+    private void cargarMisionesDefaultLocal() {
+        // Sin sesión: solo visual, no persiste
+        MisionModel m1 = new MisionModel("Entrega especial",
+                "Entrega un paquete sellado al Gremio de Comerciantes.", "100 XP", 100, "disponible");
+        m1.id = "local_1";
+        MisionModel m2 = new MisionModel("Caza de bandidos",
+                "Elimina a los bandidos del camino del norte.", "200 XP", 200, "disponible");
+        m2.id = "local_2";
+        renderMisionDisponible(m1);
+        renderMisionDisponible(m2);
+        actualizarVisibilidadSinMisiones();
     }
 
-    //Hechizos
+    private void crearMisionEnFirestore(String nombre, String descripcion, String recompensa) {
+        long xp = MisionModel.extraerXp(recompensa);
+        if (uid == null) {
+            MisionModel m = new MisionModel(nombre, descripcion, recompensa, xp, "disponible");
+            m.id = "local_" + System.currentTimeMillis();
+            renderMisionDisponible(m);
+            actualizarVisibilidadSinMisiones();
+            return;
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("nombre", nombre);
+        data.put("descripcion", descripcion);
+        data.put("recompensa", recompensa);
+        data.put("xpRecompensa", xp);
+        data.put("estado", "disponible");
+        data.put("creadaEn", com.google.firebase.Timestamp.now());
+
+        db.collection("usuarios").document(uid).collection("misiones")
+                .add(data)
+                .addOnSuccessListener(ref -> {
+                    MisionModel m = new MisionModel(nombre, descripcion, recompensa, xp, "disponible");
+                    m.id = ref.getId();
+                    renderMisionDisponible(m);
+                    actualizarVisibilidadSinMisiones();
+                });
+    }
+
+    /** Cambia el estado de una misión en Firestore. */
+    private void actualizarEstadoMision(String misionId, String nuevoEstado) {
+        if (uid == null || misionId.startsWith("local_")) return; // sin persistencia
+        db.collection("usuarios").document(uid).collection("misiones")
+                .document(misionId)
+                .update("estado", nuevoEstado);
+    }
+
+    // Render: Misión disponible (con botón ACEPTAR)
+    private void renderMisionDisponible(MisionModel m) {
+        LinearLayout wrapper = new LinearLayout(this);
+        wrapper.setOrientation(LinearLayout.VERTICAL);
+
+        if (layoutDisponibles.getChildCount() > 0) {
+            View sep = new View(this);
+            sep.setTag("sep");
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 1);
+            lp.setMargins(0, dp(3), 0, dp(3));
+            sep.setLayoutParams(lp);
+            sep.setBackgroundColor(color(R.color.borde));
+            wrapper.addView(sep);
+        }
+
+        LinearLayout item = new LinearLayout(this);
+        item.setOrientation(LinearLayout.HORIZONTAL);
+        item.setPadding(0, dp(10), 0, dp(10));
+        item.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView icono = new TextView(this);
+        icono.setText("📜"); icono.setTextSize(22);
+        icono.setPadding(0, 0, dp(10), 0);
+
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setLayoutParams(new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        info.addView(txt(m.nombre, 13, R.color.texto, true));
+        info.addView(txt(m.descripcion, 11, R.color.texto_secundario, false));
+        info.addView(txt("Recompensa:  " + m.recompensa, 11, R.color.dorado_claro, false));
+
+        androidx.appcompat.widget.AppCompatButton btn =
+                new androidx.appcompat.widget.AppCompatButton(this);
+        btn.setText("ACEPTAR");
+        btn.setTextSize(10);
+        btn.setTextColor(color(R.color.dorado));
+        btn.setBackgroundColor(color(R.color.boton_bg));
+        btn.setOnClickListener(v -> {
+            btn.setEnabled(false);
+            btn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> aceptarMision(m, wrapper), 120);
+        });
+
+        item.addView(icono); item.addView(info); item.addView(btn);
+        wrapper.addView(item);
+        layoutDisponibles.addView(wrapper);
+        vistasMisionesDisponibles.put(m.id, wrapper);
+    }
+
+    private void aceptarMision(MisionModel m, LinearLayout wrapper) {
+        if (wrapper.getParent() == null) return;
+        if (Boolean.TRUE.equals(wrapper.getTag())) return;
+        wrapper.setTag(true);
+
+        actualizarEstadoMision(m.id, "activa");
+
+        wrapper.animate()
+                .alpha(0f).translationX(200f).setDuration(250)
+                .withEndAction(() -> {
+                    wrapper.clearAnimation();
+                    wrapper.post(() -> {
+                        if (wrapper.getParent() != null) layoutDisponibles.removeView(wrapper);
+                        vistasMisionesDisponibles.remove(m.id);
+                        if (layoutDisponibles.getChildCount() > 0) {
+                            View primer = layoutDisponibles.getChildAt(0);
+                            if (primer instanceof LinearLayout) {
+                                LinearLayout pw = (LinearLayout) primer;
+                                if (pw.getChildCount() > 0 && "sep".equals(pw.getChildAt(0).getTag())) {
+                                    pw.removeViewAt(0);
+                                }
+                            }
+                        }
+                        m.estado = "activa";
+                        renderMisionActivaAnimada(m);
+                        actualizarVisibilidadSinMisiones();
+                    });
+                }).start();
+    }
+
+    // Render: Misión activa (con botones COMPLETAR / CANCELAR)
+    private void renderMisionActivaAnimada(MisionModel m) {
+        if (layoutActivas.getChildCount() > 0) agregarSeparador(layoutActivas);
+        LinearLayout item = buildItemMisionActiva(m);
+        layoutActivas.addView(item);
+        vistasMisionesActivas.put(m.id, item);
+        item.setAlpha(0f);
+        item.setTranslationX(-200f);
+        item.animate().alpha(1f).translationX(0f).setDuration(250).start();
+    }
+
+    private void renderMisionActiva(MisionModel m) {
+        if (layoutActivas.getChildCount() > 0) agregarSeparador(layoutActivas);
+        LinearLayout item = buildItemMisionActiva(m);
+        layoutActivas.addView(item);
+        vistasMisionesActivas.put(m.id, item);
+    }
+
+    private LinearLayout buildItemMisionActiva(MisionModel m) {
+        LinearLayout item = new LinearLayout(this);
+        item.setOrientation(LinearLayout.VERTICAL);
+        item.setPadding(0, dp(10), 0, dp(10));
+
+        LinearLayout filaInfo = new LinearLayout(this);
+        filaInfo.setOrientation(LinearLayout.HORIZONTAL);
+        filaInfo.setGravity(Gravity.CENTER_VERTICAL);
+
+        TextView icono = new TextView(this);
+        icono.setText("⚔️"); icono.setTextSize(22);
+        icono.setPadding(0, 0, dp(10), 0);
+        icono.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setLayoutParams(new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        info.addView(txt(m.nombre, 13, R.color.texto, true));
+        info.addView(txt("Recompensa:  " + m.recompensa, 11, R.color.dorado_claro, false));
+
+        TextView badge = new TextView(this);
+        badge.setText("EN CURSO");
+        badge.setTextColor(color(R.color.dorado));
+        badge.setTextSize(9);
+        badge.setPadding(dp(8), dp(4), dp(8), dp(4));
+        badge.setBackgroundColor(color(R.color.boton_bg));
+
+        filaInfo.addView(icono); filaInfo.addView(info); filaInfo.addView(badge);
+        item.addView(filaInfo);
+
+        // Fila de botones: COMPLETAR / CANCELAR
+        LinearLayout filaBtns = new LinearLayout(this);
+        filaBtns.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams filaBtnsLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        filaBtnsLp.setMargins(0, dp(8), 0, 0);
+        filaBtns.setLayoutParams(filaBtnsLp);
+
+        Button btnCompletar = new Button(this);
+        btnCompletar.setText("✓  COMPLETAR");
+        btnCompletar.setTextSize(10);
+        btnCompletar.setTextColor(color(R.color.dorado));
+        btnCompletar.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
+        LinearLayout.LayoutParams compLp = new LinearLayout.LayoutParams(
+                0, dp(34), 1);
+        compLp.setMargins(0, 0, dp(4), 0);
+        btnCompletar.setLayoutParams(compLp);
+
+        Button btnCancelar = new Button(this);
+        btnCancelar.setText("✕  CANCELAR");
+        btnCancelar.setTextSize(10);
+        btnCancelar.setTextColor(0xFFC05050);
+        btnCancelar.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(color(R.color.boton_bg)));
+        LinearLayout.LayoutParams cancLp = new LinearLayout.LayoutParams(
+                0, dp(34), 1);
+        cancLp.setMargins(dp(4), 0, 0, 0);
+        btnCancelar.setLayoutParams(cancLp);
+
+        btnCompletar.setOnClickListener(v -> {
+            btnCompletar.setEnabled(false);
+            btnCancelar.setEnabled(false);
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> completarMision(m, item), 120);
+        });
+
+        btnCancelar.setOnClickListener(v -> {
+            btnCompletar.setEnabled(false);
+            btnCancelar.setEnabled(false);
+            v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
+            new Handler(Looper.getMainLooper()).postDelayed(
+                    () -> cancelarMision(m, item), 120);
+        });
+
+        filaBtns.addView(btnCompletar);
+        filaBtns.addView(btnCancelar);
+        item.addView(filaBtns);
+
+        return item;
+    }
+
+    private void completarMision(MisionModel m, LinearLayout item) {
+        actualizarEstadoMision(m.id, "completada");
+        removerMisionActivaConAnimacion(item, () -> {
+            // Otorgar XP al personaje activo
+            if (personajeActivo != null) {
+                otorgarXpAPersonajeActivo(m.xpRecompensa);
+            }
+        });
+    }
+
+    private void cancelarMision(MisionModel m, LinearLayout item) {
+        actualizarEstadoMision(m.id, "cancelada");
+        removerMisionActivaConAnimacion(item, null);
+    }
+
+    private void removerMisionActivaConAnimacion(LinearLayout item, Runnable alFinalizar) {
+        item.animate()
+                .alpha(0f).translationX(200f).setDuration(250)
+                .withEndAction(() -> {
+                    item.clearAnimation();
+                    item.post(() -> {
+                        if (item.getParent() != null) layoutActivas.removeView(item);
+                        if (layoutActivas.getChildCount() > 0) {
+                            View primer = layoutActivas.getChildAt(0);
+                            // Si el primer hijo es un separador suelto, quitarlo
+                        }
+                        actualizarVisibilidadSinMisiones();
+                        if (alFinalizar != null) alFinalizar.run();
+                    });
+                }).start();
+    }
+
+    private void actualizarVisibilidadSinMisiones() {
+        txtSinMisionesActivas.setVisibility(
+                layoutActivas.getChildCount() == 0 ? View.VISIBLE : View.GONE);
+    }
+
+    private void agregarSeparador(LinearLayout parent) {
+        View sep = new View(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        lp.setMargins(0, dp(3), 0, dp(3));
+        sep.setLayoutParams(lp);
+        sep.setBackgroundColor(color(R.color.borde));
+        parent.addView(sep);
+    }
+
+    // HECHIZOS
     private void agregarSpell(SpellModel spell) {
         LinearLayout item = new LinearLayout(this);
         item.setOrientation(LinearLayout.HORIZONTAL);
@@ -398,126 +983,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Misiones
-    private void aceptarMisionConAnimacion(String nombre, String recompensa,
-                                           LinearLayout wrapper) {
-        if (wrapper.getParent() == null) return;
-        if (Boolean.TRUE.equals(wrapper.getTag())) return;
-        wrapper.setTag(true);
 
-        wrapper.animate()
-                .alpha(0f).translationX(200f).setDuration(250)
-                .withEndAction(() -> {
-                    wrapper.clearAnimation();
-                    wrapper.post(() -> {
-                        if (wrapper.getParent() != null)
-                            layoutDisponibles.removeView(wrapper);
-                        if (layoutDisponibles.getChildCount() > 0) {
-                            View primerChild = layoutDisponibles.getChildAt(0);
-                            if (primerChild instanceof LinearLayout) {
-                                LinearLayout primerWrapper = (LinearLayout) primerChild;
-                                if (primerWrapper.getChildCount() > 0
-                                        && "sep".equals(primerWrapper.getChildAt(0).getTag())) {
-                                    primerWrapper.removeViewAt(0);
-                                }
-                            }
-                        }
-                        agregarMisionActivaAnimada(nombre, recompensa);
-                    });
-                }).start();
+    // FIREBASE: sesión
+
+    private void guardarSesionEnFirestore() {
+        if (uid == null) return;
+        Map<String, Object> datos = new HashMap<>();
+        datos.put("email", userEmail);
+        datos.put("ultimaConexion", com.google.firebase.Timestamp.now());
+        db.collection("usuarios").document(uid).set(datos,
+                com.google.firebase.firestore.SetOptions.merge());
     }
 
-    private void agregarMisionActivaAnimada(String nombre, String recompensa) {
-        if (layoutActivas.getChildCount() > 0) agregarSeparador(layoutActivas);
-        LinearLayout item = buildItemMisionActiva(nombre, recompensa);
-        layoutActivas.addView(item);
-        item.setAlpha(0f);
-        item.setTranslationX(-200f);
-        item.animate().alpha(1f).translationX(0f).setDuration(250).start();
-    }
 
-    private LinearLayout buildItemMisionActiva(String nombre, String recompensa) {
-        LinearLayout item = new LinearLayout(this);
-        item.setOrientation(LinearLayout.HORIZONTAL);
-        item.setPadding(0, dp(10), 0, dp(10));
-        item.setGravity(Gravity.CENTER_VERTICAL);
-
-        TextView icono = new TextView(this);
-        icono.setText("⚔️"); icono.setTextSize(22);
-        icono.setPadding(0, 0, dp(10), 0);
-        icono.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        LinearLayout info = new LinearLayout(this);
-        info.setOrientation(LinearLayout.VERTICAL);
-        info.setLayoutParams(new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-        info.addView(txt(nombre, 13, R.color.texto, true));
-        info.addView(txt("Recompensa:  " + recompensa, 11, R.color.dorado_claro, false));
-
-        TextView badge = new TextView(this);
-        badge.setText("EN CURSO");
-        badge.setTextColor(color(R.color.dorado));
-        badge.setTextSize(9);
-        badge.setPadding(dp(8), dp(4), dp(8), dp(4));
-        badge.setBackgroundColor(color(R.color.boton_bg));
-
-        item.addView(icono); item.addView(info); item.addView(badge);
-        return item;
-    }
-
-    private void agregarMisionDisponible(String nombre, String descripcion, String recompensa) {
-        LinearLayout wrapper = new LinearLayout(this);
-        wrapper.setOrientation(LinearLayout.VERTICAL);
-
-        if (layoutDisponibles.getChildCount() > 0) {
-            View sep = new View(this);
-            sep.setTag("sep");
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            lp.setMargins(0, dp(3), 0, dp(3));
-            sep.setLayoutParams(lp);
-            sep.setBackgroundColor(color(R.color.borde));
-            wrapper.addView(sep);
-        }
-
-        LinearLayout item = new LinearLayout(this);
-        item.setOrientation(LinearLayout.HORIZONTAL);
-        item.setPadding(0, dp(10), 0, dp(10));
-        item.setGravity(Gravity.CENTER_VERTICAL);
-        item.setTag(wrapper);
-
-        TextView icono = new TextView(this);
-        icono.setText("📜"); icono.setTextSize(22);
-        icono.setPadding(0, 0, dp(10), 0);
-
-        LinearLayout info = new LinearLayout(this);
-        info.setOrientation(LinearLayout.VERTICAL);
-        info.setLayoutParams(new LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-        info.addView(txt(nombre, 13, R.color.texto, true));
-        info.addView(txt(descripcion, 11, R.color.texto_secundario, false));
-        info.addView(txt("Recompensa:  " + recompensa, 11, R.color.dorado_claro, false));
-
-        androidx.appcompat.widget.AppCompatButton btn =
-                new androidx.appcompat.widget.AppCompatButton(this);
-        btn.setText("ACEPTAR");
-        btn.setTextSize(10);
-        btn.setTextColor(color(R.color.dorado));
-        btn.setBackgroundColor(color(R.color.boton_bg));
-        btn.setOnClickListener(v -> {
-            btn.setEnabled(false);
-            btn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press));
-            new Handler(Looper.getMainLooper()).postDelayed(
-                    () -> aceptarMisionConAnimacion(nombre, recompensa, wrapper), 120);
-        });
-
-        item.addView(icono); item.addView(info); item.addView(btn);
-        wrapper.addView(item);
-        layoutDisponibles.addView(wrapper);
-    }
-
-    //Menú
+    // MENÚ
     private void configurarMenu() {
         findViewById(R.id.menuInicio).setOnClickListener(v ->
                 v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.btn_press)));
@@ -615,7 +1094,7 @@ public class MainActivity extends AppCompatActivity {
         d.show();
     }
 
-    //Historial de dados
+    // HISTORIAL DE DADOS
     private void mostrarHistorial() {
         LinearLayout raiz = new LinearLayout(this);
         raiz.setOrientation(LinearLayout.VERTICAL);
@@ -761,7 +1240,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    //Dado con animación
+    // DADOS
+
     private void configurarBtnDado(int btnId, int caras) {
         View btn = findViewById(btnId);
         btn.setOnClickListener(v -> {
@@ -827,7 +1307,9 @@ public class MainActivity extends AppCompatActivity {
         }, DURACION + 50);
     }
 
-    //Utilities
+
+    // UTILITIES
+
     private void pulsarYEjecutar(View v, Runnable accion) {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.btn_press);
         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -836,16 +1318,6 @@ public class MainActivity extends AppCompatActivity {
             @Override public void onAnimationEnd(Animation a) { accion.run(); }
         });
         v.startAnimation(anim);
-    }
-
-    private void agregarSeparador(LinearLayout parent) {
-        View sep = new View(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        lp.setMargins(0, dp(3), 0, dp(3));
-        sep.setLayoutParams(lp);
-        sep.setBackgroundColor(color(R.color.borde));
-        parent.addView(sep);
     }
 
     private View separadorDorado() {

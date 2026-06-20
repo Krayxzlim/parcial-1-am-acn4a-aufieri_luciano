@@ -83,28 +83,50 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!-- Header clickeable → CrearPersonajeActivity -->
+                    <!-- Fila superior: Título + Selector de personajes + Crear -->
                     <LinearLayout
-                        android:id="@+id/btnHeaderPersonaje"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:clickable="true"
-                        android:focusable="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
+                            android:id="@+id/btnHeaderPersonaje"
                             android:text="TU PERSONAJE"
                             android:textColor="@color/dorado"
                             android:textSize="13sp"
                             android:textStyle="bold"
                             android:fontFamily="serif"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"/>
+
+                        <!-- Selector: cambia entre personajes guardados -->
                         <TextView
-                            android:text="›"
-                            android:textColor="@color/dorado"
-                            android:textSize="18sp"
+                            android:id="@+id/btnCambiarPersonaje"
+                            android:text="⇄ CAMBIAR"
+                            android:textColor="@color/dorado_claro"
+                            android:textSize="9sp"
+                            android:background="@drawable/stat_bg"
+                            android:padding="5dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:visibility="gone"
+                            android:layout_marginEnd="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/btnNuevoPersonaje"
+                            android:text="✦ NUEVO"
+                            android:textColor="@color/dorado_claro"
+                            android:textSize="9sp"
+                            android:background="@drawable/stat_bg"
+                            android:padding="5dp"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
@@ -218,7 +240,7 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <!-- Stats: CA / PG / INIC + atributos -->
+                        <!-- Stats: CA / PG / INICIATIVA + atributos -->
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="200dp"
@@ -289,7 +311,7 @@
                                         android:textStyle="bold"/>
                                 </LinearLayout>
 
-                                <!-- INICIATIVA -->
+                                <!-- INICIATIVA = mod DES -->
                                 <LinearLayout
                                     android:layout_width="60dp"
                                     android:layout_height="70dp"
@@ -301,11 +323,11 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="center"
-                                        android:text="NIVEL"
+                                        android:text="INIC."
                                         android:textColor="@color/dorado_claro"
                                         android:textSize="8sp"/>
                                     <TextView
-                                        android:id="@+id/txtNivelStat"
+                                        android:id="@+id/txtIniciativa"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="center"
@@ -321,68 +343,117 @@
                                 android:orientation="horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp">
+                                android:layout_marginTop="6dp">
 
                                 <LinearLayout android:orientation="vertical" android:gravity="center"
                                     android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                                    <TextView android:text="FUE" android:textColor="@color/dorado_claro" android:textSize="7sp"
+                                    <TextView android:text="FUE" android:textColor="@color/dorado_claro" android:textSize="8sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtFUE" android:text="-" android:textColor="@color/texto_secundario" android:textSize="13sp" android:textStyle="bold"
+                                    <TextView android:id="@+id/txtFUE" android:text="-" android:textColor="@color/texto_secundario" android:textSize="15sp" android:textStyle="bold"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtFUEmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="8sp"
+                                    <TextView android:id="@+id/txtFUEmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="9sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                                 </LinearLayout>
 
                                 <LinearLayout android:orientation="vertical" android:gravity="center"
                                     android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                                    <TextView android:text="DES" android:textColor="@color/dorado_claro" android:textSize="7sp"
+                                    <TextView android:text="DES" android:textColor="@color/dorado_claro" android:textSize="8sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtDES" android:text="-" android:textColor="@color/texto_secundario" android:textSize="13sp" android:textStyle="bold"
+                                    <TextView android:id="@+id/txtDES" android:text="-" android:textColor="@color/texto_secundario" android:textSize="15sp" android:textStyle="bold"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtDESmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="8sp"
-                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                </LinearLayout>
-
-                                <LinearLayout android:orientation="vertical" android:gravity="center"
-                                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                                    <TextView android:text="CON" android:textColor="@color/dorado_claro" android:textSize="7sp"
-                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtCON" android:text="-" android:textColor="@color/texto_secundario" android:textSize="13sp" android:textStyle="bold"
-                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtCONmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="8sp"
+                                    <TextView android:id="@+id/txtDESmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="9sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                                 </LinearLayout>
 
                                 <LinearLayout android:orientation="vertical" android:gravity="center"
                                     android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                                    <TextView android:text="INT" android:textColor="@color/dorado_claro" android:textSize="7sp"
+                                    <TextView android:text="CON" android:textColor="@color/dorado_claro" android:textSize="8sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtINT" android:text="-" android:textColor="@color/texto_secundario" android:textSize="13sp" android:textStyle="bold"
+                                    <TextView android:id="@+id/txtCON" android:text="-" android:textColor="@color/texto_secundario" android:textSize="15sp" android:textStyle="bold"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtINTmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="8sp"
-                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                </LinearLayout>
-
-                                <LinearLayout android:orientation="vertical" android:gravity="center"
-                                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                                    <TextView android:text="SAB" android:textColor="@color/dorado_claro" android:textSize="7sp"
-                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtSAB" android:text="-" android:textColor="@color/texto_secundario" android:textSize="13sp" android:textStyle="bold"
-                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtSABmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="8sp"
+                                    <TextView android:id="@+id/txtCONmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="9sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                                 </LinearLayout>
 
                                 <LinearLayout android:orientation="vertical" android:gravity="center"
                                     android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
-                                    <TextView android:text="CAR" android:textColor="@color/dorado_claro" android:textSize="7sp"
+                                    <TextView android:text="INT" android:textColor="@color/dorado_claro" android:textSize="8sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtCAR" android:text="-" android:textColor="@color/texto_secundario" android:textSize="13sp" android:textStyle="bold"
+                                    <TextView android:id="@+id/txtINT" android:text="-" android:textColor="@color/texto_secundario" android:textSize="15sp" android:textStyle="bold"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                                    <TextView android:id="@+id/txtCARmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="8sp"
+                                    <TextView android:id="@+id/txtINTmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="9sp"
+                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:orientation="vertical" android:gravity="center"
+                                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                    <TextView android:text="SAB" android:textColor="@color/dorado_claro" android:textSize="8sp"
+                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                    <TextView android:id="@+id/txtSAB" android:text="-" android:textColor="@color/texto_secundario" android:textSize="15sp" android:textStyle="bold"
+                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                    <TextView android:id="@+id/txtSABmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="9sp"
+                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                </LinearLayout>
+
+                                <LinearLayout android:orientation="vertical" android:gravity="center"
+                                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1">
+                                    <TextView android:text="CAR" android:textColor="@color/dorado_claro" android:textSize="8sp"
+                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                    <TextView android:id="@+id/txtCAR" android:text="-" android:textColor="@color/texto_secundario" android:textSize="15sp" android:textStyle="bold"
+                                        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                                    <TextView android:id="@+id/txtCARmod" android:text="" android:textColor="@color/texto_secundario" android:textSize="9sp"
                                         android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                                 </LinearLayout>
                             </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Barra de progreso XP -->
+                    <LinearLayout
+                        android:id="@+id/layoutXpBar"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="2dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/txtNivelXp"
+                                android:text="Nivel 1"
+                                android:textColor="@color/dorado_claro"
+                                android:textSize="9sp"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:id="@+id/txtXpActual"
+                                android:text="0 / 300 XP"
+                                android:textColor="@color/texto_secundario"
+                                android:textSize="9sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="6dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@drawable/stat_bg">
+                            <View
+                                android:id="@+id/barraXpFill"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0"
+                                android:background="@color/dorado"/>
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -433,8 +504,6 @@
                         <TextView android:text="MISIONES ACTIVAS" android:textColor="@color/dorado"
                             android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
                             android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                        <TextView android:text="›" android:textColor="@color/dorado" android:textSize="18sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp"
@@ -444,9 +513,13 @@
                     <LinearLayout android:id="@+id/layoutActivas" android:orientation="vertical"
                         android:layout_width="match_parent" android:layout_height="wrap_content"/>
 
-                    <TextView android:text="VER TODAS LAS MISIONES  ›"
-                        android:textColor="@color/dorado_claro" android:textSize="11sp"
-                        android:gravity="center" android:paddingTop="6dp"
+                    <TextView
+                        android:id="@+id/txtSinMisionesActivas"
+                        android:text="No tenés misiones activas"
+                        android:textColor="@color/texto_secundario"
+                        android:textSize="11sp"
+                        android:gravity="center"
+                        android:paddingTop="8dp" android:paddingBottom="4dp"
                         android:layout_width="match_parent" android:layout_height="wrap_content"/>
                 </LinearLayout>
 
@@ -484,8 +557,6 @@
                         <TextView android:text="MISIONES DISPONIBLES" android:textColor="@color/dorado"
                             android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
                             android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                        <TextView android:text="›" android:textColor="@color/dorado" android:textSize="18sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp"
@@ -536,8 +607,6 @@
                         <TextView android:text="HECHIZOS CONOCIDOS" android:textColor="@color/dorado"
                             android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
                             android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                        <TextView android:text="›" android:textColor="@color/dorado" android:textSize="18sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp"
@@ -579,13 +648,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/txtVerTodosHechizos"
-                        android:text="VER TODOS EN EL GRIMORIO  ›"
-                        android:textColor="@color/dorado_claro" android:textSize="11sp"
-                        android:gravity="end" android:paddingTop="6dp"
-                        android:clickable="true" android:focusable="true"
-                        android:layout_width="match_parent" android:layout_height="wrap_content"/>
                 </LinearLayout>
 
                 <ImageView android:layout_width="20dp" android:layout_height="20dp"
@@ -622,8 +684,6 @@
                         <TextView android:text="TIRADA DE DADOS" android:textColor="@color/dorado"
                             android:textSize="13sp" android:textStyle="bold" android:fontFamily="serif"
                             android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
-                        <TextView android:text="›" android:textColor="@color/dorado" android:textSize="18sp"
-                            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp"
