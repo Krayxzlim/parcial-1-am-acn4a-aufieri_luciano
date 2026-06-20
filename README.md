@@ -9,7 +9,7 @@
 
 El informe describe las pantallas de la aplicación, sus funcionalidades esperadas y el flujo de uso de cada una.
 
-**[→ Ver Informe Interactivo](https://rawcdn.githack.com/Krayxzlim/parcial-1-am-acn4a-aufieri_luciano/main/informe_dnd_companion.html)**
+**[→ Ver Informe Interactivo](https://rawcdn.githack.com/Krayxzlim/parcial-1-am-acn4a-aufieri_luciano/f79d2f0d2fe803f42525869e3c91e4df295cd807/informe_dnd_companion.html)**
 
 > Si el link no abre, descargá el archivo [`informe_dnd_companion.html`](./informe_dnd_companion.html) haciendo clic derecho → *Guardar como* y abrilo en tu navegador.
 
